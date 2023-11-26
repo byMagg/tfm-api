@@ -1,12 +1,25 @@
-import express, { Express, Request, Response } from "express";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { connect } from "./db";
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+import { typeDefs } from "./models/typeDef";
+import { resolvers } from "./resolvers";
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const port = Number(process.env.PORT) || 3000;
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+connect();
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+const startServer = async () => {
+  try {
+    const { url } = await startStandaloneServer(server, {
+      listen: { port },
+    });
+    console.log(`Server ready at ${url}`);
+  } catch (error: any) {
+    console.error("Error starting server: ", error.message);
+  }
+};
+
+startServer();
