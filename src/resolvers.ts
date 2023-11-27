@@ -2,6 +2,9 @@ import { CyberAttack } from "./models/Attack";
 
 export const resolvers = {
   Query: {
+    attackCount: async () => {
+      return CyberAttack.collection.countDocuments();
+    },
     getAttacks: async (
       _: any,
       { limit, offset }: { limit: number; offset: number }

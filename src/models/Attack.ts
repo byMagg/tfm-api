@@ -78,6 +78,4 @@ const cyberAttackSchema = new Schema({
   },
 });
 
-const CyberAttack = mongoose.model("CyberAttack", cyberAttackSchema);
-
-export { CyberAttack };
+export const CyberAttack = mongoose.model("CyberAttack", cyberAttackSchema);
