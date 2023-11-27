@@ -2,12 +2,13 @@ import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
   type Query {
-    hello: String
-    welcome(name: String): String
+    getAttacks(limit: Int, offset: Int): [CyberAttack]
+    getAttackByTrafficType(trafficType: String!): [CyberAttack]
   }
 
   # Student object
   type CyberAttack {
+    _id: ID
     Timestamp: String
     SourceIPAddress: String
     DestinationIPAddress: String

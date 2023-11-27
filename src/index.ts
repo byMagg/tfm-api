@@ -7,8 +7,6 @@ import { resolvers } from "./resolvers";
 
 const port = Number(process.env.PORT) || 3000;
 
-connect();
-
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const startServer = async () => {
@@ -23,3 +21,4 @@ const startServer = async () => {
 };
 
 startServer();
+connect();
