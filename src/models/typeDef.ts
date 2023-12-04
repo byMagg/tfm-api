@@ -4,7 +4,11 @@ export const typeDefs = gql`
   type Query {
     attackCount: Int
     getAttacks(limit: Int, offset: Int): [CyberAttack]
-    getAttackByTrafficType(trafficType: String!): [CyberAttack]
+    getAttackByTrafficType(
+      trafficType: String!
+      limit: Int
+      offset: Int
+    ): [CyberAttack]
   }
 
   # Student object

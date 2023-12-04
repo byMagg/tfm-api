@@ -7,15 +7,21 @@ export const resolvers = {
     },
     getAttacks: async (
       _: any,
-      { limit, offset }: { limit: number; offset: number }
+      { limit = 10, offset = 0 }: { limit: number; offset: number }
     ) => {
-      return await CyberAttack.find().skip(offset).limit(limit);
+      return await CyberAttack.find().limit(limit).skip(offset);
     },
     getAttackByTrafficType: async (
       _: any,
-      { trafficType }: { trafficType: string }
+      {
+        trafficType,
+        limit = 10,
+        offset = 0,
+      }: { trafficType: string; limit: number; offset: number }
     ) => {
-      return await CyberAttack.find({ "Traffic Type": trafficType });
+      return await CyberAttack.find({ TrafficType: trafficType })
+        .limit(limit)
+        .skip(offset);
     },
   },
 };

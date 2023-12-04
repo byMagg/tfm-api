@@ -2,30 +2,30 @@ import mongoose, { Schema } from "mongoose";
 
 const cyberAttackSchema = new Schema({
   Timestamp: {
-    type: "Date",
-  },
-  "Source IP Address": {
     type: "String",
   },
-  "Destination IP Address": {
+  SourceIPAddress: {
     type: "String",
   },
-  "Source Port": {
-    type: "Date",
+  DestinationIPAddress: {
+    type: "String",
   },
-  "Destination Port": {
-    type: "Date",
+  SourcePort: {
+    type: "String",
+  },
+  DestinationPort: {
+    type: "String",
   },
   Protocol: {
     type: "String",
   },
   "Packet Length": {
-    type: "Date",
+    type: "String",
   },
   "Packet Type": {
     type: "String",
   },
-  "Traffic Type": {
+  TrafficType: {
     type: "String",
   },
   "Payload Data": {
@@ -35,7 +35,7 @@ const cyberAttackSchema = new Schema({
     type: "String",
   },
   "Anomaly Scores": {
-    type: "Date",
+    type: "String",
   },
   "Alerts/Warnings": {
     type: "String",
