@@ -1,27 +1,27 @@
-import { CyberAttack } from "./models/Attack";
+import { TrafficCrash } from './models/TrafficCrash'
 
 export const resolvers = {
   Query: {
-    attackCount: async () => {
-      return CyberAttack.collection.countDocuments();
+    crashCount: async () => {
+      return TrafficCrash.collection.countDocuments()
     },
-    getAttacks: async (
+    getCrashes: async (
       _: any,
       { limit = 10, offset = 0 }: { limit: number; offset: number }
     ) => {
-      return await CyberAttack.find().limit(limit).skip(offset);
+      return await TrafficCrash.find().limit(limit).skip(offset)
     },
-    getAttackByTrafficType: async (
+    getCrashByWeatherCondition: async (
       _: any,
       {
-        trafficType,
+        weatherCondition,
         limit = 10,
         offset = 0,
-      }: { trafficType: string; limit: number; offset: number }
+      }: { weatherCondition: string; limit: number; offset: number }
     ) => {
-      return await CyberAttack.find({ TrafficType: trafficType })
+      return await TrafficCrash.find({ WEATHER_CONDITION: weatherCondition })
         .limit(limit)
-        .skip(offset);
+        .skip(offset)
     },
   },
-};
+}
