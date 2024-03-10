@@ -4,6 +4,7 @@ export const typeDefs = gql`
   type Query {
     crashCount: Int
     getCrashes(limit: Int, offset: Int): [TrafficCrash]
+    getCrashById(crashId: String!): TrafficCrash
     getCrashByWeatherCondition(
       weatherCondition: String!
       limit: Int

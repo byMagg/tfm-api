@@ -11,6 +11,9 @@ export const resolvers = {
     ) => {
       return await TrafficCrash.find().limit(limit).skip(offset)
     },
+    getCrashById: async (_: any, { crashId }: { crashId: string }) => {
+      return await TrafficCrash.findOne({ CRASH_RECORD_ID: crashId })
+    },
     getCrashByWeatherCondition: async (
       _: any,
       {
