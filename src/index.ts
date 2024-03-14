@@ -5,7 +5,7 @@ import { connect } from './db'
 import { typeDefs } from './models/typeDef'
 import { resolvers } from './resolvers'
 
-const port = Number(process.env.PORT) || 4321
+const port = Number(process.env.PORT) || 3000
 
 const server = new ApolloServer({ typeDefs, resolvers })
 
