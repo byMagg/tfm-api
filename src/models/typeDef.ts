@@ -2,64 +2,58 @@ import { gql } from 'graphql-tag'
 
 export const typeDefs = gql`
   type Query {
-    crashCount: Int
-    getCrashes(limit: Int, offset: Int): [TrafficCrash]
-    getCrashById(crashId: String!): TrafficCrash
-    getCrashByWeatherCondition(
-      weatherCondition: String!
-      limit: Int
-      offset: Int
-    ): [TrafficCrash]
+    accidentCount: Int
+    getAccidents(limit: Int, offset: Int): [Accident]
+    getAccidentById(accidentId: String!): Accident
   }
 
-  type TrafficCrash {
-    CRASH_RECORD_ID: String
-    CRASH_DATE_EST_I: String
-    CRASH_DATE: String
-    POSTED_SPEED_LIMIT: String
-    TRAFFIC_CONTROL_DEVICE: String
-    DEVICE_CONDITION: String
-    WEATHER_CONDITION: String
-    LIGHTING_CONDITION: String
-    FIRST_CRASH_TYPE: String
-    TRAFFICWAY_TYPE: String
-    LANE_CNT: String
-    ALIGNMENT: String
-    ROADWAY_SURFACE_COND: String
-    ROAD_DEFECT: String
-    REPORT_TYPE: String
-    CRASH_TYPE: String
-    INTERSECTION_RELATED_I: String
-    NOT_RIGHT_OF_WAY_I: String
-    HIT_AND_RUN_I: String
-    DAMAGE: String
-    DATE_POLICE_NOTIFIED: String
-    PRIM_CONTRIBUTORY_CAUSE: String
-    SEC_CONTRIBUTORY_CAUSE: String
-    STREET_NO: String
-    STREET_DIRECTION: String
-    STREET_NAME: String
-    BEAT_OF_OCCURRENCE: String
-    PHOTOS_TAKEN_I: String
-    STATEMENTS_TAKEN_I: String
-    DOORING_I: String
-    WORK_ZONE_I: String
-    WORK_ZONE_TYPE: String
-    WORKERS_PRESENT_I: String
-    NUM_UNITS: String
-    MOST_SEVERE_INJURY: String
-    INJURIES_TOTAL: String
-    INJURIES_FATAL: String
-    INJURIES_INCAPACITATING: String
-    INJURIES_NON_INCAPACITATING: String
-    INJURIES_REPORTED_NOT_EVIDENT: String
-    INJURIES_NO_INDICATION: String
-    INJURIES_UNKNOWN: String
-    CRASH_HOUR: String
-    CRASH_DAY_OF_WEEK: String
-    CRASH_MONTH: String
-    LATITUDE: String
-    LONGITUDE: String
-    LOCATION: String
+  type Accident {
+    _id: String
+    ID: String
+    Source: String
+    Severity: String
+    Start_Time: String
+    End_Time: String
+    Start_Lat: String
+    Start_Lng: String
+    End_Lat: String
+    End_Lng: String
+    Distancemi: String
+    Description: String
+    Street: String
+    City: String
+    County: String
+    State: String
+    Zipcode: String
+    Country: String
+    Timezone: String
+    Airport_Code: String
+    Weather_Timestamp: String
+    TemperatureF: String
+    Wind_ChillF: String
+    Humidity: String
+    Pressurein: String
+    Visibilitymi: String
+    Wind_Direction: String
+    Wind_Speedmph: String
+    Precipitationin: String
+    Weather_Condition: String
+    Amenity: String
+    Bump: String
+    Crossing: String
+    Give_Way: String
+    Junction: String
+    No_Exit: String
+    Railway: String
+    Roundabout: String
+    Station: String
+    Stop: String
+    Traffic_Calming: String
+    Traffic_Signal: String
+    Turning_Loop: String
+    Sunrise_Sunset: String
+    Civil_Twilight: String
+    Nautical_Twilight: String
+    Astronomical_Twilight: String
   }
 `

@@ -1,30 +1,18 @@
-import { TrafficCrash } from './models/TrafficCrash'
+import { Accident } from './models/Accident'
 
 export const resolvers = {
   Query: {
-    crashCount: async () => {
-      return TrafficCrash.collection.countDocuments()
+    accidentCount: async () => {
+      return Accident.collection.countDocuments()
     },
-    getCrashes: async (
+    getAccidents: async (
       _: any,
       { limit = 10, offset = 0 }: { limit: number; offset: number }
     ) => {
-      return await TrafficCrash.find().limit(limit).skip(offset)
+      return await Accident.find().limit(limit).skip(offset)
     },
-    getCrashById: async (_: any, { crashId }: { crashId: string }) => {
-      return await TrafficCrash.findOne({ CRASH_RECORD_ID: crashId })
-    },
-    getCrashByWeatherCondition: async (
-      _: any,
-      {
-        weatherCondition,
-        limit = 10,
-        offset = 0,
-      }: { weatherCondition: string; limit: number; offset: number }
-    ) => {
-      return await TrafficCrash.find({ WEATHER_CONDITION: weatherCondition })
-        .limit(limit)
-        .skip(offset)
+    getAccidentById: async (_: any, { accidentId }: { accidentId: string }) => {
+      return await Accident.findOne({ ID: accidentId })
     },
   },
 }
