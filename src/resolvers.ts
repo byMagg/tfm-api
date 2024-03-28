@@ -3,7 +3,7 @@ import { Accident } from './models/Accident'
 export const resolvers = {
   Query: {
     accidentCount: async () => {
-      return Accident.collection.countDocuments()
+      return await Accident.estimatedDocumentCount()
     },
     getAccidents: async (
       _: any,
