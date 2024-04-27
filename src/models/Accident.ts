@@ -32,7 +32,7 @@ const accidentsSchema = new Schema(
     End_Lng: {
       type: 'String',
     },
-    'Distance(mi)': {
+    Distance: {
       type: 'String',
     },
     Description: {
@@ -65,28 +65,28 @@ const accidentsSchema = new Schema(
     Weather_Timestamp: {
       type: 'Date',
     },
-    'Temperature(F)': {
+    Temperature: {
       type: 'String',
     },
-    'Wind_Chill(F)': {
+    Wind_Chill: {
       type: 'String',
     },
-    'Humidity(%)': {
+    Humidity: {
       type: 'String',
     },
-    'Pressure(in)': {
+    Pressure: {
       type: 'String',
     },
-    'Visibility(mi)': {
+    Visibility: {
       type: 'String',
     },
     Wind_Direction: {
       type: 'String',
     },
-    'Wind_Speed(mph)': {
+    Wind_Speed: {
       type: 'String',
     },
-    'Precipitation(in)': {
+    Precipitation: {
       type: 'String',
     },
     Weather_Condition: {

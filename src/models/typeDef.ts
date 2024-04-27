@@ -18,7 +18,7 @@ export const typeDefs = gql`
     Start_Lng: String
     End_Lat: String
     End_Lng: String
-    Distancemi: String
+    Distance: String
     Description: String
     Street: String
     City: String
@@ -29,14 +29,14 @@ export const typeDefs = gql`
     Timezone: String
     Airport_Code: String
     Weather_Timestamp: String
-    TemperatureF: String
-    Wind_ChillF: String
+    Temperature: String
+    Wind_Chill: String
     Humidity: String
-    Pressurein: String
-    Visibilitymi: String
+    Pressure: String
+    Visibility: String
     Wind_Direction: String
-    Wind_Speedmph: String
-    Precipitationin: String
+    Wind_Speed: String
+    Precipitation: String
     Weather_Condition: String
     Amenity: String
     Bump: String
