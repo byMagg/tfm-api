@@ -12,7 +12,7 @@ const accidentsSchema = new Schema(
       type: 'String',
     },
     Severity: {
-      type: 'Date',
+      type: 'String',
     },
     Start_Time: {
       type: 'Date',

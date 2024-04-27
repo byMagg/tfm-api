@@ -5,6 +5,11 @@ export const typeDefs = gql`
     accidentCount: Int
     getAccidents(limit: Int, offset: Int): [Accident]
     getAccidentById(accidentId: String!): Accident
+    getAccidentsBySeverity(
+      severity: String!
+      limit: Int
+      offset: Int
+    ): [Accident]
   }
 
   type Accident {

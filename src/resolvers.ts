@@ -14,5 +14,17 @@ export const resolvers = {
     getAccidentById: async (_: any, { accidentId }: { accidentId: string }) => {
       return await Accident.findOne({ ID: accidentId })
     },
+    getAccidentsBySeverity: async (
+      _: any,
+      {
+        severity,
+        limit = 10,
+        offset = 0,
+      }: { severity: string; limit: number; offset: number }
+    ) => {
+      return await Accident.find({ Severity: severity })
+        .limit(limit)
+        .skip(offset)
+    },
   },
 }
