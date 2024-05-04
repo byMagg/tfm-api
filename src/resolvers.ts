@@ -1,4 +1,5 @@
 import { Accident } from './models/Accident'
+import { Match } from './models/Match'
 
 export const resolvers = {
   Query: {
@@ -25,6 +26,12 @@ export const resolvers = {
       return await Accident.find({ Severity: severity })
         .limit(limit)
         .skip(offset)
+    },
+    getMatches: async (
+      _: any,
+      { limit = 10, offset = 0 }: { limit: number; offset: number }
+    ) => {
+      return await Match.find().limit(limit).skip(offset)
     },
   },
 }
