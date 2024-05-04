@@ -83,7 +83,7 @@ export const typeDefs = gql`
     winner_hand: String
     winner_ht: String
     winner_ioc: String
-    winner_age: Int
+    winner_age: Float
     loser_id: Int
     loser_seed: String
     loser_entry: String
