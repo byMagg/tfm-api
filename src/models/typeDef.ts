@@ -64,6 +64,10 @@ export const typeDefs = gql`
     Astronomical_Twilight: String
   }
 
+  type Id {
+    oid: String
+  }
+
   type Match {
     tourney_id: String
     tourney_name: String
@@ -146,6 +150,6 @@ export const typeDefs = gql`
     loser1_rank_points: String
     loser2_rank: String
     loser2_rank_points: String
-    _id: ID
+    _id: Id
   }
 `
