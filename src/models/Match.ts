@@ -3,9 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 const matchSchema = new Schema(
   {
     _id: {
-      $oid: {
-        type: 'ObjectId',
-      },
+      type: Schema.Types.ObjectId,
     },
     tourney_id: {
       type: 'String',
