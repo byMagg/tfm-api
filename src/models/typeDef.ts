@@ -11,6 +11,7 @@ export const typeDefs = gql`
       offset: Int
     ): [Accident]
 
+    matchesCount: Int
     getMatches(limit: Int, offset: Int): [Match]
   }
 
@@ -62,10 +63,6 @@ export const typeDefs = gql`
     Civil_Twilight: String
     Nautical_Twilight: String
     Astronomical_Twilight: String
-  }
-
-  type Id {
-    oid: String
   }
 
   type Match {
@@ -150,6 +147,6 @@ export const typeDefs = gql`
     loser1_rank_points: String
     loser2_rank: String
     loser2_rank_points: String
-    _id: Id
+    _id: ID
   }
 `

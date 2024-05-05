@@ -27,6 +27,9 @@ export const resolvers = {
         .limit(limit)
         .skip(offset)
     },
+    matchesCount: async () => {
+      return await Match.estimatedDocumentCount()
+    },
     getMatches: async (
       _: any,
       { limit = 10, offset = 0 }: { limit: number; offset: number }
