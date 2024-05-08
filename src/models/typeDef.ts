@@ -91,4 +91,16 @@ export const typeDefs = gql`
     loser2_rank: String
     loser2_rank_points: String
   }
+
+  type Player {
+    _id: Id
+    player_id: Int
+    name_first: String
+    name_last: String
+    hand: String
+    dob: Int
+    ioc: String
+    height: Int
+    wikidata_id: String
+  }
 `
