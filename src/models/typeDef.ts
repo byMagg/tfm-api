@@ -5,6 +5,10 @@ export const typeDefs = gql`
     matchesCount: Int
     getMatches(limit: Int, offset: Int): [Match]
     getMatchById(matchId: String!): Match
+
+    playersCount: Int
+    getPlayers(limit: Int, offset: Int): [Player]
+    getPlayerById(playerId: String!): Player
   }
 
   type Match {
@@ -93,7 +97,7 @@ export const typeDefs = gql`
   }
 
   type Player {
-    _id: Id
+    _id: ID
     player_id: Int
     name_first: String
     name_last: String
