@@ -9,6 +9,10 @@ export const typeDefs = gql`
     playersCount: Int
     getPlayers(limit: Int, offset: Int): [Player]
     getPlayerById(playerId: String!): Player
+
+    rankingsCount: Int
+    getRankings(limit: Int, offset: Int): [Ranking]
+    getRankingById(rankingId: String!): Ranking
   }
 
   type Match {
@@ -106,5 +110,13 @@ export const typeDefs = gql`
     ioc: String
     height: Int
     wikidata_id: String
+  }
+
+  type Ranking {
+    _id: ID
+    ranking_date: Int
+    rank: Int
+    player: Int
+    points: Int
   }
 `

@@ -1,5 +1,6 @@
 import { Match } from './models/Match'
 import { Player } from './models/Player'
+import { Ranking } from './models/Ranking'
 
 export const resolvers = {
   Query: {
@@ -27,6 +28,19 @@ export const resolvers = {
     },
     getPlayerById: async (_: any, { playerId }: { playerId: string }) => {
       return await Player.findOne({ _id: playerId })
+    },
+
+    rankingsCount: async () => {
+      return await Ranking.estimatedDocumentCount()
+    },
+    getRankings: async (
+      _: any,
+      { limit = 10, offset = 0 }: { limit: number; offset: number }
+    ) => {
+      return await Ranking.find().limit(limit).skip(offset)
+    },
+    getRankingById: async (_: any, { rankingId }: { rankingId: string }) => {
+      return await Ranking.findOne({ _id: rankingId })
     },
   },
 }
