@@ -9,6 +9,7 @@ export const typeDefs = gql`
     playersCount: Int
     getPlayers(limit: Int, offset: Int): [Player]
     getPlayerById(playerId: String!): Player
+    getPlayerByPlayerId(playerId: String!): Player
 
     rankingsCount: Int
     getRankings(limit: Int, offset: Int): [Ranking]

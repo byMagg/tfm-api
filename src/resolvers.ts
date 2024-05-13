@@ -29,6 +29,9 @@ export const resolvers = {
     getPlayerById: async (_: any, { playerId }: { playerId: string }) => {
       return await Player.findOne({ _id: playerId })
     },
+    getPlayerByPlayerId: async (_: any, { playerId }: { playerId: string }) => {
+      return await Player.findOne({ player_id: playerId })
+    },
 
     rankingsCount: async () => {
       return await Ranking.estimatedDocumentCount()
