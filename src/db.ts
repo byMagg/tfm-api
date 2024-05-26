@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
-
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/tfm";
+import mongoose from 'mongoose'
 
 export const connect = async () => {
   try {
-    await mongoose.connect(MONGODB_URI);
-    console.log("Connected to MongoDB");
+    await mongoose.connect(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/tfm'
+    )
+    console.log('Connected to MongoDB')
   } catch (error: any) {
-    console.error("Error connecting to MongoDB: ", error.message);
+    console.error('Error connecting to MongoDB: ', error.message)
   }
-};
+}
