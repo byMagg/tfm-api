@@ -14,6 +14,8 @@ export const typeDefs = gql`
     rankingsCount: Int
     getRankings(limit: Int, offset: Int): [Ranking]
     getRankingById(rankingId: String!): Ranking
+
+    createLeague(name: String!): League
   }
 
   type Match {
@@ -119,5 +121,11 @@ export const typeDefs = gql`
     rank: Int
     player: Int
     points: Int
+  }
+
+  type League {
+    _id: ID
+    name: String
+    players: [Player]
   }
 `

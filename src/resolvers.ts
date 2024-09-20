@@ -1,3 +1,4 @@
+import { League } from './models/League'
 import { Match } from './models/Match'
 import { Player } from './models/Player'
 import { Ranking } from './models/Ranking'
@@ -44,6 +45,9 @@ export const resolvers = {
     },
     getRankingById: async (_: any, { rankingId }: { rankingId: string }) => {
       return await Ranking.findOne({ _id: rankingId })
+    },
+    createLeague: async (_: any, { name }: { name: string }) => {
+      return await League.create({ name })
     },
   },
 }
