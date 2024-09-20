@@ -15,6 +15,9 @@ export const typeDefs = gql`
     getRankings(limit: Int, offset: Int): [Ranking]
     getRankingById(rankingId: String!): Ranking
 
+    leaguesCount: Int
+    getLeagues(limit: Int, offset: Int): [League]
+    getLeagueById(leagueId: String!): League
     createLeague(name: String!): League
   }
 

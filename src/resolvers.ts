@@ -46,6 +46,21 @@ export const resolvers = {
     getRankingById: async (_: any, { rankingId }: { rankingId: string }) => {
       return await Ranking.findOne({ _id: rankingId })
     },
+
+    leaguesCount: async () => {
+      return await League.estimatedDocumentCount()
+    },
+    getLeagues: async (
+      _: any,
+      { limit = 10, offset = 0 }: { limit: number; offset: number }
+    ) => {
+      return await League.find().limit(limit).skip(offset)
+    },
+    getLeagueById: async (_: any, { leagueId }: { leagueId: string }) => {
+      return await League.findOne({
+        _id: leagueId,
+      })
+    },
     createLeague: async (_: any, { name }: { name: string }) => {
       return await League.create({ name })
     },
