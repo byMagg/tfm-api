@@ -19,6 +19,7 @@ export const typeDefs = gql`
     getLeagues(limit: Int, offset: Int): [League]
     getLeagueById(leagueId: String!): League
     createLeague(name: String!): League
+    addPlayersToLeague(leagueId: String!, playerIds: [String]!): League
   }
 
   type Match {
@@ -129,6 +130,6 @@ export const typeDefs = gql`
   type League {
     _id: ID
     name: String
-    players: [Player]
+    players: [String!]!
   }
 `

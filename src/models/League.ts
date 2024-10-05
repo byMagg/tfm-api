@@ -6,7 +6,7 @@ const leagueSchema = new Schema(
       type: 'String',
     },
     players: {
-      type: 'Array',
+      type: [String],
     },
   },
   {

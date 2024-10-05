@@ -64,5 +64,15 @@ export const resolvers = {
     createLeague: async (_: any, { name }: { name: string }) => {
       return await League.create({ name })
     },
+    addPlayersToLeague: async (
+      _: any,
+      { leagueId, playerIds }: { leagueId: string; playerIds: string[] }
+    ) => {
+      return await League.findOneAndUpdate(
+        { _id: leagueId },
+        { $addToSet: { players: { $each: playerIds } } },
+        { new: true }
+      )
+    },
   },
 }
