@@ -74,5 +74,15 @@ export const resolvers = {
         { new: true }
       )
     },
+    deletePlayersFromLeague: async (
+      _: any,
+      { leagueId, playerIds }: { leagueId: string; playerIds: string[] }
+    ) => {
+      return await League.findOneAndUpdate(
+        { _id: leagueId },
+        { $pull: { players: { $in: playerIds } } },
+        { new: true }
+      )
+    },
   },
 }

@@ -20,6 +20,7 @@ export const typeDefs = gql`
     getLeagueById(leagueId: String!): League
     createLeague(name: String!): League
     addPlayersToLeague(leagueId: String!, playerIds: [String]!): League
+    deletePlayersFromLeague(leagueId: String!, playerIds: [String]!): League
   }
 
   type Match {
