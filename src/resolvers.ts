@@ -62,6 +62,10 @@ export const resolvers = {
       })
     },
     createLeague: async (_: any, { name }: { name: string }) => {
+      if (!name) {
+        throw new Error('Name is required')
+      }
+
       return await League.create({ name })
     },
     addPlayersToLeague: async (
