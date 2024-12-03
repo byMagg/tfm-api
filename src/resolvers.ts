@@ -78,6 +78,9 @@ export const resolvers = {
         { new: true }
       )
     },
+    checkPlayerInLeague: async (_: any, { playerId }: { playerId: string }) => {
+      return await League.findOne({ players: playerId })
+    },
     deletePlayersFromLeague: async (
       _: any,
       { leagueId, playerIds }: { leagueId: string; playerIds: string[] }
