@@ -8,6 +8,9 @@ const leagueSchema = new Schema(
     players: {
       type: [String],
     },
+    startedAt: {
+      type: Date,
+    },
   },
   {
     collection: 'leagues',

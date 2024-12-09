@@ -81,6 +81,13 @@ export const resolvers = {
     checkPlayerInLeague: async (_: any, { playerId }: { playerId: string }) => {
       return await League.findOne({ players: playerId })
     },
+    startSeason: async (_: any, { leagueId }: { leagueId: string }) => {
+      return await League.findOneAndUpdate(
+        { _id: leagueId },
+        { $set: { startedAt: new Date() } },
+        { new: true }
+      )
+    },
     deletePlayersFromLeague: async (
       _: any,
       { leagueId, playerIds }: { leagueId: string; playerIds: string[] }

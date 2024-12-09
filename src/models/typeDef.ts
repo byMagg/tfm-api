@@ -21,6 +21,7 @@ export const typeDefs = gql`
     createLeague(name: String!): League
     addPlayersToLeague(leagueId: String!, playerIds: [String]!): League
     checkPlayerInLeague(playerId: String!): League
+    startSeason(leagueId: String!): League
     deletePlayersFromLeague(leagueId: String!, playerIds: [String]!): League
   }
 
@@ -133,5 +134,6 @@ export const typeDefs = gql`
     _id: ID
     name: String
     players: [String!]!
+    startedAt: String
   }
 `
