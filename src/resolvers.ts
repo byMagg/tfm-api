@@ -1,4 +1,5 @@
 import { League } from './models/League'
+import { LeagueMatch } from './models/LeagueMatch'
 import { Match } from './models/Match'
 import { Player } from './models/Player'
 import { Ranking } from './models/Ranking'
@@ -95,6 +96,58 @@ export const resolvers = {
       return await League.findOneAndUpdate(
         { _id: leagueId },
         { $pull: { players: { $in: playerIds } } },
+        { new: true }
+      )
+    },
+    getLeagueMatchesInSeason: async (
+      _: any,
+      { leagueId }: { leagueId: string }
+    ) => {
+      return await LeagueMatch.find({ league_id: leagueId })
+    },
+    getLeagueMatchesInSeasonByPlayer: async (
+      _: any,
+      { leagueId, playerId }: { leagueId: string; playerId: string }
+    ) => {
+      return await LeagueMatch.find({
+        league_id: leagueId,
+        $or: [{ player1: playerId }, { player2: playerId }],
+      })
+    },
+    createLeagueMatchesInSeason: async (
+      _: any,
+      { leagueId }: { leagueId: string }
+    ) => {
+      const league = await League.findOne({ _id: leagueId })
+      if (!league) {
+        throw new Error('League not found')
+      }
+
+      const { players } = league
+      const matches = []
+      for (let i = 0; i < players.length; i++) {
+        for (let j = i + 1; j < players.length; j++) {
+          matches.push({
+            player1: players[i],
+            player2: players[j],
+            league_id: leagueId,
+          })
+        }
+      }
+
+      return await LeagueMatch.insertMany(matches)
+    },
+    setMatchScore: async (
+      _: any,
+      {
+        matchId,
+        score,
+        winner,
+      }: { matchId: string; score: string; winner: string }
+    ) => {
+      return await LeagueMatch.findOneAndUpdate(
+        { _id: matchId },
+        { $set: { score, winner } },
         { new: true }
       )
     },

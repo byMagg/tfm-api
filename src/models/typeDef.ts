@@ -23,6 +23,18 @@ export const typeDefs = gql`
     checkPlayerInLeague(playerId: String!): League
     startSeason(leagueId: String!): League
     deletePlayersFromLeague(leagueId: String!, playerIds: [String]!): League
+
+    getLeagueMatchesInSeason(leagueId: String!): [LeagueMatch]
+    getLeagueMatchesInSeasonByPlayer(
+      leagueId: String!
+      playerId: String!
+    ): [LeagueMatch]
+    createLeagueMatchesInSeason(leagueId: String!): [LeagueMatch]
+    setMatchScore(
+      matchId: String!
+      score: String!
+      winner: String!
+    ): LeagueMatch
   }
 
   type Match {
@@ -135,5 +147,14 @@ export const typeDefs = gql`
     name: String
     players: [String!]!
     startedAt: String
+  }
+
+  type LeagueMatch {
+    _id: ID
+    player1: String
+    player2: String
+    league_id: String
+    winner: String
+    score: String
   }
 `
