@@ -24,6 +24,8 @@ export const typeDefs = gql`
     startSeason(leagueId: String!): League
     deletePlayersFromLeague(leagueId: String!, playerIds: [String]!): League
 
+    initializeLeagueMatchesInSeason(leagueId: String!): Season
+
     getLeagueMatchesInSeason(leagueId: String!): [LeagueMatch]
     getLeagueMatchesInSeasonByPlayer(
       leagueId: String!
@@ -149,11 +151,18 @@ export const typeDefs = gql`
     startedAt: String
   }
 
+  type Season {
+    _id: ID
+    start_date: String
+    league_id: String
+    matches: [LeagueMatch]
+  }
+
   type LeagueMatch {
     _id: ID
     player1: String
     player2: String
-    league_id: String
+    season_id: String
     winner: String
     score: String
   }

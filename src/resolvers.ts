@@ -1,8 +1,8 @@
 import { League } from './models/League'
-import { LeagueMatch } from './models/LeagueMatch'
 import { Match } from './models/Match'
 import { Player } from './models/Player'
 import { Ranking } from './models/Ranking'
+import { Season } from './models/Season'
 
 export const resolvers = {
   Query: {
@@ -67,7 +67,27 @@ export const resolvers = {
         throw new Error('Name is required')
       }
 
-      return await League.create({ name })
+      const league = await League.create({ name })
+
+      const start_date = new Date()
+
+      if (start_date.getMonth() === 11) {
+        start_date.setMonth(0)
+        start_date.setFullYear(start_date.getFullYear() + 1)
+      }
+
+      for (let i = start_date.getMonth(); i < 12; i++) {
+        start_date.setMonth(i)
+        start_date.setDate(1)
+        start_date.setHours(0, 0, 0, 0)
+
+        await Season.create({
+          start_date: start_date,
+          league_id: league._id,
+        })
+      }
+
+      return league
     },
     addPlayersToLeague: async (
       _: any,
@@ -99,57 +119,81 @@ export const resolvers = {
         { new: true }
       )
     },
-    getLeagueMatchesInSeason: async (
-      _: any,
-      { leagueId }: { leagueId: string }
-    ) => {
-      return await LeagueMatch.find({ league_id: leagueId })
-    },
-    getLeagueMatchesInSeasonByPlayer: async (
-      _: any,
-      { leagueId, playerId }: { leagueId: string; playerId: string }
-    ) => {
-      return await LeagueMatch.find({
-        league_id: leagueId,
-        $or: [{ player1: playerId }, { player2: playerId }],
-      })
-    },
-    createLeagueMatchesInSeason: async (
+    initializeLeagueMatchesInSeason: async (
       _: any,
       { leagueId }: { leagueId: string }
     ) => {
       const league = await League.findOne({ _id: leagueId })
+
       if (!league) {
         throw new Error('League not found')
       }
 
-      const { players } = league
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+      const season = await Season.findOne({
+        league_id: leagueId,
+        start_date: {
+          $gte: startOfMonth,
+          $lt: endOfMonth,
+        },
+      })
+
+      if (!season) {
+        throw new Error('Season not found')
+      }
+
+      const players = league.players
+
+      if (players.length < 2) {
+        throw new Error('Not enough players')
+      }
+
       const matches = []
+
       for (let i = 0; i < players.length; i++) {
         for (let j = i + 1; j < players.length; j++) {
           matches.push({
             player1: players[i],
             player2: players[j],
-            league_id: leagueId,
+            season_id: season._id,
           })
         }
       }
 
-      return await LeagueMatch.insertMany(matches)
+      return await season.updateOne({ matches })
     },
-    setMatchScore: async (
-      _: any,
-      {
-        matchId,
-        score,
-        winner,
-      }: { matchId: string; score: string; winner: string }
-    ) => {
-      return await LeagueMatch.findOneAndUpdate(
-        { _id: matchId },
-        { $set: { score, winner } },
-        { new: true }
-      )
-    },
+    // getLeagueMatchesInSeason: async (
+    //   _: any,
+    //   { leagueId }: { leagueId: string }
+    // ) => {
+    //   return await LeagueMatch.find({ league_id: leagueId })
+    // },
+    // getLeagueMatchesInSeasonByPlayer: async (
+    //   _: any,
+    //   { leagueId, playerId }: { leagueId: string; playerId: string }
+    // ) => {
+    //   return await LeagueMatch.find({
+    //     league_id: leagueId,
+    //     $or: [{ player1: playerId }, { player2: playerId }],
+    //   })
+    // },
+
+    // setMatchScore: async (
+    //   _: any,
+    //   {
+    //     matchId,
+    //     score,
+    //     winner,
+    //   }: { matchId: string; score: string; winner: string }
+    // ) => {
+    //   return await LeagueMatch.findOneAndUpdate(
+    //     { _id: matchId },
+    //     { $set: { score, winner } },
+    //     { new: true }
+    //   )
+    // },
   },
 }

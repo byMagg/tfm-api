@@ -8,7 +8,7 @@ const leagueMatchSchema = new Schema(
     player2: {
       type: 'String',
     },
-    league_id: {
+    season_id: {
       type: 'String',
     },
     winner: {
@@ -23,4 +23,19 @@ const leagueMatchSchema = new Schema(
   }
 )
 
-export const LeagueMatch = mongoose.model('LeagueMatch', leagueMatchSchema)
+const seasonSchema = new Schema(
+  {
+    start_date: {
+      type: 'Date',
+    },
+    league_id: {
+      type: 'String',
+    },
+    matches: [leagueMatchSchema],
+  },
+  {
+    collection: 'seasons',
+  }
+)
+
+export const Season = mongoose.model('Season', seasonSchema)
