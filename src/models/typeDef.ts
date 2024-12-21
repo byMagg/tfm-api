@@ -149,11 +149,13 @@ export const typeDefs = gql`
     name: String
     players: [String!]!
     startedAt: String
+    seasons: [Season]
+    currentSeason: Season
   }
 
   type Season {
     _id: ID
-    start_date: String
+    startedAt: String
     league_id: String
     matches: [LeagueMatch]
   }

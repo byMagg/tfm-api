@@ -165,21 +165,52 @@ export const resolvers = {
 
       return await season.updateOne({ matches })
     },
-    // getLeagueMatchesInSeason: async (
-    //   _: any,
-    //   { leagueId }: { leagueId: string }
-    // ) => {
-    //   return await LeagueMatch.find({ league_id: leagueId })
-    // },
-    // getLeagueMatchesInSeasonByPlayer: async (
-    //   _: any,
-    //   { leagueId, playerId }: { leagueId: string; playerId: string }
-    // ) => {
-    //   return await LeagueMatch.find({
-    //     league_id: leagueId,
-    //     $or: [{ player1: playerId }, { player2: playerId }],
-    //   })
-    // },
+    getLeagueMatchesInSeason: async (
+      _: any,
+      { leagueId }: { leagueId: string }
+    ) => {
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+      const season = await Season.findOne({
+        league_id: leagueId,
+        start_date: {
+          $gte: startOfMonth,
+          $lt: endOfMonth,
+        },
+      })
+
+      if (!season) {
+        throw new Error('Season not found')
+      }
+
+      return season.matches
+    },
+    getLeagueMatchesInSeasonByPlayer: async (
+      _: any,
+      { leagueId, playerId }: { leagueId: string; playerId: string }
+    ) => {
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+      const season = await Season.findOne({
+        league_id: leagueId,
+        start_date: {
+          $gte: startOfMonth,
+          $lt: endOfMonth,
+        },
+      })
+
+      if (!season) {
+        throw new Error('Season not found')
+      }
+
+      return season.matches.filter(
+        (match) => match.player1 === playerId || match.player2 === playerId
+      )
+    },
 
     // setMatchScore: async (
     //   _: any,
@@ -195,5 +226,23 @@ export const resolvers = {
     //     { new: true }
     //   )
     // },
+  },
+  League: {
+    seasons: async (parent: any) => {
+      return await Season.find({ league_id: parent._id })
+    },
+    currentSeason: async (parent: any) => {
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+      return await Season.findOne({
+        league_id: parent._id,
+        start_date: {
+          $gte: startOfMonth,
+          $lt: endOfMonth,
+        },
+      })
+    },
   },
 }

@@ -3,19 +3,19 @@ import mongoose, { Schema } from 'mongoose'
 const leagueMatchSchema = new Schema(
   {
     player1: {
-      type: 'String',
+      type: String,
     },
     player2: {
-      type: 'String',
+      type: String,
     },
     season_id: {
-      type: 'String',
+      type: String,
     },
     winner: {
-      type: 'String',
+      type: String,
     },
     score: {
-      type: 'String',
+      type: String,
     },
   },
   {
@@ -23,13 +23,13 @@ const leagueMatchSchema = new Schema(
   }
 )
 
-const seasonSchema = new Schema(
+export const seasonSchema = new Schema(
   {
-    start_date: {
-      type: 'Date',
+    startedAt: {
+      type: Date,
     },
     league_id: {
-      type: 'String',
+      type: String,
     },
     matches: [leagueMatchSchema],
   },
