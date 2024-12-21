@@ -69,20 +69,20 @@ export const resolvers = {
 
       const league = await League.create({ name })
 
-      const start_date = new Date()
+      const startedAt = new Date()
 
-      if (start_date.getMonth() === 11) {
-        start_date.setMonth(0)
-        start_date.setFullYear(start_date.getFullYear() + 1)
+      if (startedAt.getMonth() === 11) {
+        startedAt.setMonth(0)
+        startedAt.setFullYear(startedAt.getFullYear() + 1)
       }
 
-      for (let i = start_date.getMonth(); i < 12; i++) {
-        start_date.setMonth(i)
-        start_date.setDate(1)
-        start_date.setHours(0, 0, 0, 0)
+      for (let i = startedAt.getMonth(); i < 12; i++) {
+        startedAt.setMonth(i)
+        startedAt.setDate(1)
+        startedAt.setHours(0, 0, 0, 0)
 
         await Season.create({
-          start_date: start_date,
+          startedAt: startedAt,
           league_id: league._id,
         })
       }
@@ -135,7 +135,7 @@ export const resolvers = {
 
       const season = await Season.findOne({
         league_id: leagueId,
-        start_date: {
+        startedAt: {
           $gte: startOfMonth,
           $lt: endOfMonth,
         },
@@ -238,7 +238,7 @@ export const resolvers = {
 
       return await Season.findOne({
         league_id: parent._id,
-        start_date: {
+        startedAt: {
           $gte: startOfMonth,
           $lt: endOfMonth,
         },

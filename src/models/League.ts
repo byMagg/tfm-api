@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose'
-import { seasonSchema } from './Season'
 
 const leagueSchema = new Schema(
   {
@@ -12,7 +11,6 @@ const leagueSchema = new Schema(
     startedAt: {
       type: Date,
     },
-    seasons: [seasonSchema],
   },
   {
     collection: 'leagues',
