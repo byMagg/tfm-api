@@ -164,7 +164,7 @@ export const resolvers = {
         }
       }
 
-      return await season.updateOne({ matches })
+      return await LeagueMatch.insertMany(matches)
     },
 
     // setMatchScore: async (
