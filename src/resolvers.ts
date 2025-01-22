@@ -1,4 +1,5 @@
 import { League } from './models/League'
+import { LeagueMatch } from './models/LeagueMatch'
 import { Match } from './models/Match'
 import { Player } from './models/Player'
 import { Ranking } from './models/Ranking'
@@ -165,52 +166,6 @@ export const resolvers = {
 
       return await season.updateOne({ matches })
     },
-    getLeagueMatchesInSeason: async (
-      _: any,
-      { leagueId }: { leagueId: string }
-    ) => {
-      const now = new Date()
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-
-      const season = await Season.findOne({
-        league_id: leagueId,
-        start_date: {
-          $gte: startOfMonth,
-          $lt: endOfMonth,
-        },
-      })
-
-      if (!season) {
-        throw new Error('Season not found')
-      }
-
-      return season.matches
-    },
-    getLeagueMatchesInSeasonByPlayer: async (
-      _: any,
-      { leagueId, playerId }: { leagueId: string; playerId: string }
-    ) => {
-      const now = new Date()
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-
-      const season = await Season.findOne({
-        league_id: leagueId,
-        start_date: {
-          $gte: startOfMonth,
-          $lt: endOfMonth,
-        },
-      })
-
-      if (!season) {
-        throw new Error('Season not found')
-      }
-
-      return season.matches.filter(
-        (match) => match.player1 === playerId || match.player2 === playerId
-      )
-    },
 
     // setMatchScore: async (
     //   _: any,
@@ -243,6 +198,11 @@ export const resolvers = {
           $lt: endOfMonth,
         },
       })
+    },
+  },
+  Season: {
+    matches: async (parent: any) => {
+      return await LeagueMatch.find({ season_id: parent._id })
     },
   },
 }
