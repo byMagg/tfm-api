@@ -166,6 +166,9 @@ export const resolvers = {
 
       return await LeagueMatch.insertMany(matches)
     },
+    getLeagueMatchById: async (_: any, { matchId }: { matchId: string }) => {
+      return await LeagueMatch.findOne({ _id: matchId })
+    },
 
     // setMatchScore: async (
     //   _: any,

@@ -25,6 +25,7 @@ export const typeDefs = gql`
     deletePlayersFromLeague(leagueId: String!, playerIds: [String]!): League
 
     initializeLeagueMatchesInSeason(leagueId: String!): Season
+    getLeagueMatchById(matchId: String!): LeagueMatch
 
     getLeagueMatchesInSeason(leagueId: String!): [LeagueMatch]
     getLeagueMatchesInSeasonByPlayer(
