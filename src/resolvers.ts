@@ -169,21 +169,20 @@ export const resolvers = {
     getLeagueMatchById: async (_: any, { matchId }: { matchId: string }) => {
       return await LeagueMatch.findOne({ _id: matchId })
     },
-
-    // setMatchScore: async (
-    //   _: any,
-    //   {
-    //     matchId,
-    //     score,
-    //     winner,
-    //   }: { matchId: string; score: string; winner: string }
-    // ) => {
-    //   return await LeagueMatch.findOneAndUpdate(
-    //     { _id: matchId },
-    //     { $set: { score, winner } },
-    //     { new: true }
-    //   )
-    // },
+    setMatchScore: async (
+      _: any,
+      {
+        matchId,
+        score,
+        winner,
+      }: { matchId: string; score: string; winner: string }
+    ) => {
+      return await LeagueMatch.findOneAndUpdate(
+        { _id: matchId },
+        { $set: { score, winner } },
+        { new: true }
+      )
+    },
   },
   League: {
     seasons: async (parent: any) => {
