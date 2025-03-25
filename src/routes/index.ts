@@ -113,4 +113,12 @@ router.get('/leagues/players/:playerId', async (req, res) => {
   })
 })
 
+router.get('/league-matches/:id', async (req, res) => {
+  const match = await LeagueMatch.findById(req.params.id)
+  sendResponse({
+    res,
+    data: match,
+  })
+})
+
 export default router
