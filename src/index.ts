@@ -1,27 +1,19 @@
-import { ApolloServer } from '@apollo/server'
-import { startStandaloneServer } from '@apollo/server/standalone'
 import * as dotenv from 'dotenv'
+import express from 'express'
 import { connect } from './db'
-
-import { typeDefs } from './models/typeDef'
-import { resolvers } from './resolvers'
+import router from './routes'
 
 dotenv.config()
 
+const app = express()
 const port = Number(process.env.PORT) || 3000
 
-const server = new ApolloServer({ typeDefs, resolvers })
+app.use(express.json())
 
-const startServer = async () => {
-  try {
-    const { url } = await startStandaloneServer(server, {
-      listen: { port },
-    })
-    console.log(`Server ready at ${url}`)
-  } catch (error: any) {
-    console.error('Error starting server: ', error.message)
-  }
-}
+app.use('/api', router)
 
-startServer()
 connect()
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`)
+})
