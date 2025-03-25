@@ -1,3 +1,4 @@
+import cors from 'cors'
 import * as dotenv from 'dotenv'
 import express from 'express'
 import { connect } from './db'
@@ -10,9 +11,11 @@ const port = Number(process.env.PORT) || 3000
 
 app.use(express.json())
 
-app.use('/api', router)
+app.use(cors())
 
 connect()
+
+app.use('/api', router)
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
