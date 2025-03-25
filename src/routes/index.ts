@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { League } from '../models/League'
+import { LeagueMatch } from '../models/LeagueMatch'
+import { Season } from '../models/Season'
 import { sendError, sendResponse } from '../utils'
 
 const router = Router()
@@ -69,6 +71,45 @@ router.post('/leagues/:id/players', async (req, res) => {
   sendResponse({
     res,
     data: league,
+  })
+})
+
+router.get('/leagues/players/:playerId', async (req, res) => {
+  const { playerId } = req.params
+  const league = await League.findOne({ players: playerId })
+
+  if (!league) {
+    return sendError({
+      res,
+      statusCode: 404,
+      message: 'Player not found in any league',
+    })
+  }
+
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+
+  const currentSeason = await Season.findOne({
+    league_id: league._id,
+    startedAt: {
+      $gte: startOfMonth,
+      $lt: endOfMonth,
+    },
+  })
+
+  const matches = await LeagueMatch.find({
+    season_id: currentSeason?._id,
+    player1: playerId,
+  })
+
+  sendResponse({
+    res,
+    data: {
+      league,
+      currentSeason,
+      matches,
+    },
   })
 })
 
