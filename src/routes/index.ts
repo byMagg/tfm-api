@@ -121,4 +121,20 @@ router.get('/league-matches/:id', async (req, res) => {
   })
 })
 
+router.post('/league-matches/:id/score', async (req, res) => {
+  const { id } = req.params
+  const { score, winner } = req.body
+
+  const match = await LeagueMatch.findByIdAndUpdate(
+    { _id: id },
+    { $set: { score, winner } },
+    { new: true }
+  )
+
+  sendResponse({
+    res,
+    data: match,
+  })
+})
+
 export default router
