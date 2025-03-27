@@ -4,6 +4,7 @@ import express from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { connect } from './db'
+import { Message } from './models/Message'
 import router from './routes'
 
 dotenv.config()
@@ -25,12 +26,23 @@ connect()
 
 app.use('/api', router)
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('user connected', socket.id)
 
-  socket.on('message', (msg) => {
-    io.emit('message', msg)
+  const messages = await Message.find().sort({ timestamp: 1 })
+  socket.emit('previousMessages', messages)
+
+  socket.on('message', async (msg) => {
+    try {
+      const newMessage = new Message(msg)
+      await newMessage.save()
+
+      io.emit('message', msg)
+    } catch (error) {
+      console.log(error)
+    }
   })
+
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id)
   })
