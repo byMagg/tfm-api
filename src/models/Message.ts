@@ -8,6 +8,9 @@ const messageSchema = new Schema(
     from: {
       type: String,
     },
+    to: {
+      type: String,
+    },
   },
   {
     collection: 'messages',

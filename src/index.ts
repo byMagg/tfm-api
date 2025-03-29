@@ -27,17 +27,27 @@ connect()
 app.use('/api', router)
 
 io.on('connection', async (socket) => {
-  console.log('user connected', socket.id)
-
-  const messages = await Message.find().sort({ timestamp: 1 })
-  socket.emit('previousMessages', messages)
-
-  socket.on('message', async (msg) => {
+  socket.on('join', async (userId) => {
+    socket.join(userId)
+    console.log(`Usuario ${userId} se unió a su sala privada`)
     try {
-      const newMessage = new Message(msg)
+      const messages = await Message.find({
+        $or: [{ from: userId }, { to: userId }],
+      }).sort({ timestamp: 1 })
+      socket.emit('previousMessages', messages)
+    } catch (error) {}
+  })
+
+  socket.on('message', async ({ content, from, to }) => {
+    try {
+      const newMessage = new Message({
+        content,
+        from,
+        to,
+      })
       await newMessage.save()
 
-      io.emit('message', msg)
+      io.to(to).to(from).emit('message', newMessage)
     } catch (error) {
       console.log(error)
     }
