@@ -22,7 +22,11 @@ const protect = async (req: any, res: any, next: NextFunction) => {
     if (typeof decoded === 'object' && decoded.id) {
       req.user = await User.findById(decoded.id).select('-password')
     } else {
-      return res.status(401).json({ message: 'Token inválido' })
+      return sendError({
+        res,
+        statusCode: 401,
+        message: 'No autorizado, token no válido',
+      })
     }
     next()
   } catch (error) {

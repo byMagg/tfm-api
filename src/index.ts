@@ -16,6 +16,7 @@ const io = new Server(httpServer)
 
 const port = Number(process.env.PORT) || 3000
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(
   cors({
@@ -23,7 +24,6 @@ app.use(
     credentials: true,
   })
 )
-app.use(cookieParser())
 
 connect()
 

@@ -8,6 +8,25 @@ import { generateToken, sendError, sendResponse } from '../utils'
 
 const router = Router()
 
+router.get('/users', protect, async (req, res) => {
+  const { page = '1', limit = '10' } = req.query
+
+  const pageNumber = Number(page) || 1
+  const limitNumber = Number(limit) || 10
+  const skip = (pageNumber - 1) * limitNumber
+
+  const users = await User.find().skip(skip).limit(limitNumber)
+  const totalUsers = await User.countDocuments()
+
+  sendResponse({
+    res,
+    data: users,
+    totalPages: Math.ceil(users.length / limitNumber),
+    total: totalUsers,
+    page: pageNumber,
+  })
+})
+
 router.get('/leagues', protect, async (req, res) => {
   const { page = '1', limit = '10' } = req.query
 
@@ -313,7 +332,6 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24 * 30,
     })
 
     sendResponse({
