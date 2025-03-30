@@ -307,11 +307,20 @@ router.post('/login', async (req, res) => {
       })
     }
 
+    const token = generateToken(user.id)
+
+    res.cookie('__session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    })
+
     sendResponse({
       res,
       data: {
         ...user.toJSON(),
-        token: generateToken(user.id),
+        token: token,
       },
       statusCode: 200,
     })
