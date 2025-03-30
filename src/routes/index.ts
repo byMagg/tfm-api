@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import mongoose from 'mongoose'
 import { protect } from '../middlewares/authMiddleware'
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
@@ -24,6 +25,29 @@ router.get('/users', protect, async (req, res) => {
     totalPages: Math.ceil(users.length / limitNumber),
     total: totalUsers,
     page: pageNumber,
+  })
+})
+
+router.post('/users', protect, async (req, res) => {
+  const { ids } = req.body
+
+  if (!ids) {
+    return sendError({
+      res,
+      statusCode: 400,
+      message: 'Debes enviar un array de ids',
+    })
+  }
+
+  const validIds = ids
+    .filter((id: string) => mongoose.Types.ObjectId.isValid(id))
+    .map((id: string) => new mongoose.Types.ObjectId(id))
+
+  const users = await User.find({ _id: { $in: validIds } })
+
+  sendResponse({
+    res,
+    data: users,
   })
 })
 

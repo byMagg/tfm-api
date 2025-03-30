@@ -4,7 +4,13 @@ import { User } from '../models/User'
 import { sendError } from '../utils'
 
 const protect = async (req: any, res: any, next: NextFunction) => {
-  const token = req.cookies.__session
+  let token
+
+  if (req.cookies.__session) {
+    token = req.cookies.__session
+  } else if (req.headers.authorization?.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  }
 
   if (!token) {
     return sendError({
