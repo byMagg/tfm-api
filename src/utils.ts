@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken'
+
 export function sendResponse({
   res,
   statusCode = 200,
@@ -33,4 +35,8 @@ export function sendError({
   res.status(statusCode).json({
     message,
   })
+}
+
+export const generateToken = (id: string) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' })
 }

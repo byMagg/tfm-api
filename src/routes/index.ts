@@ -1,12 +1,14 @@
 import { Router } from 'express'
+import { protect } from '../middlewares/authMiddleware'
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
 import { Season } from '../models/Season'
-import { sendError, sendResponse } from '../utils'
+import { User } from '../models/User'
+import { generateToken, sendError, sendResponse } from '../utils'
 
 const router = Router()
 
-router.get('/leagues', async (req, res) => {
+router.get('/leagues', protect, async (req, res) => {
   const { page = '1', limit = '10' } = req.query
 
   const pageNumber = Number(page) || 1
@@ -25,7 +27,7 @@ router.get('/leagues', async (req, res) => {
   })
 })
 
-router.get('/leagues/:id', async (req, res) => {
+router.get('/leagues/:id', protect, async (req, res) => {
   const league = await League.findById(req.params.id)
   sendResponse({
     res,
@@ -33,7 +35,7 @@ router.get('/leagues/:id', async (req, res) => {
   })
 })
 
-router.post('/leagues', async (req, res) => {
+router.post('/leagues', protect, async (req, res) => {
   const { name } = req.body
 
   if (!name) {
@@ -71,7 +73,7 @@ router.post('/leagues', async (req, res) => {
   })
 })
 
-router.post('/leagues/:id/start', async (req, res) => {
+router.post('/leagues/:id/start', protect, async (req, res) => {
   const { id } = req.params
   const league = await League.findOneAndUpdate(
     { _id: id },
@@ -93,7 +95,7 @@ router.post('/leagues/:id/start', async (req, res) => {
   })
 })
 
-router.post('/leagues/:id/matches', async (req, res) => {
+router.post('/leagues/:id/matches', protect, async (req, res) => {
   const { id } = req.params
   const league = await League.findById(id)
 
@@ -155,7 +157,7 @@ router.post('/leagues/:id/matches', async (req, res) => {
   })
 })
 
-router.post('/leagues/:id/players', async (req, res) => {
+router.post('/leagues/:id/players', protect, async (req, res) => {
   const { id } = req.params
   const { playerIds } = req.body
 
@@ -186,7 +188,7 @@ router.post('/leagues/:id/players', async (req, res) => {
   })
 })
 
-router.get('/leagues/players/:playerId', async (req, res) => {
+router.get('/leagues/players/:playerId', protect, async (req, res) => {
   const { playerId } = req.params
   const leagues = await League.find({ players: playerId })
 
@@ -233,7 +235,7 @@ router.get('/leagues/players/:playerId', async (req, res) => {
   })
 })
 
-router.get('/league-matches/:id', async (req, res) => {
+router.get('/league-matches/:id', protect, async (req, res) => {
   const match = await LeagueMatch.findById(req.params.id)
   sendResponse({
     res,
@@ -241,7 +243,7 @@ router.get('/league-matches/:id', async (req, res) => {
   })
 })
 
-router.post('/league-matches/:id/score', async (req, res) => {
+router.post('/league-matches/:id/score', protect, async (req, res) => {
   const { id } = req.params
   const { score, winner } = req.body
 
@@ -255,6 +257,71 @@ router.post('/league-matches/:id/score', async (req, res) => {
     res,
     data: match,
   })
+})
+
+router.post('/register', async (req, res) => {
+  const { name, email, password } = req.body
+
+  try {
+    const userExists = await User.findOne({ email })
+
+    if (userExists) {
+      return sendError({
+        res,
+        statusCode: 400,
+        message: 'El correo ya está registrado',
+      })
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+    })
+
+    sendResponse({
+      res,
+      data: user,
+      statusCode: 201,
+    })
+  } catch (error) {
+    sendError({
+      res,
+      statusCode: 500,
+      message: 'Error al crear el usuario',
+    })
+  }
+})
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const user = await User.findOne({ email })
+
+    if (!user || !(await user.matchPassword(password))) {
+      return sendError({
+        res,
+        statusCode: 401,
+        message: 'Credenciales incorrectas',
+      })
+    }
+
+    sendResponse({
+      res,
+      data: {
+        ...user.toJSON(),
+        token: generateToken(user.id),
+      },
+      statusCode: 200,
+    })
+  } catch (error) {
+    sendError({
+      res,
+      statusCode: 500,
+      message: 'Error al crear el usuario',
+    })
+  }
 })
 
 export default router
