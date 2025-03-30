@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import express from 'express'
@@ -22,6 +23,7 @@ app.use(
     credentials: true,
   })
 )
+app.use(cookieParser())
 
 connect()
 
