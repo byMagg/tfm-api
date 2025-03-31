@@ -28,7 +28,7 @@ router.get('/users', protect, async (req, res) => {
   })
 })
 
-router.post('/users', protect, async (req, res) => {
+router.post('/users/get-by-ids', protect, async (req, res) => {
   const { ids } = req.body
 
   if (!ids) {
@@ -48,6 +48,47 @@ router.post('/users', protect, async (req, res) => {
   sendResponse({
     res,
     data: users,
+  })
+})
+
+router.post('/users', protect, async (req, res) => {
+  const { name, email, password } = req.body
+
+  if (!name || !email || !password) {
+    return sendError({
+      res,
+      statusCode: 400,
+      message: 'Debes enviar un name, email y password',
+    })
+  }
+
+  const userExists = await User.findOne({ email })
+
+  if (userExists) {
+    return sendError({
+      res,
+      statusCode: 400,
+      message: 'Ya existe un usuario con ese email',
+    })
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+  })
+
+  sendResponse({
+    res,
+    data: user,
+  })
+})
+
+router.delete('/users', protect, async (req, res) => {
+  await User.deleteMany()
+  sendResponse({
+    res,
+    data: 'Users deleted',
   })
 })
 
