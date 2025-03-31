@@ -12,7 +12,12 @@ dotenv.config()
 
 const app = express()
 const httpServer = createServer(app)
-const io = new Server(httpServer)
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:4321',
+    credentials: true,
+  },
+})
 
 const port = Number(process.env.PORT) || 3000
 

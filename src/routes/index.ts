@@ -355,7 +355,10 @@ router.get('/leagues/players/:playerId', protect, async (req, res) => {
 })
 
 router.get('/league-matches/:id', protect, async (req, res) => {
-  const match = await LeagueMatch.findById(req.params.id)
+  const match = await LeagueMatch.findById(req.params.id).populate(
+    'player1 player2',
+    'name'
+  )
   sendResponse({
     res,
     data: match,
