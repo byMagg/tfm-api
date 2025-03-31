@@ -337,7 +337,7 @@ router.get('/leagues/players/:playerId', protect, async (req, res) => {
     const matches = await LeagueMatch.find({
       season_id: currentSeason?._id,
       $or: [{ player1: playerId }, { player2: playerId }],
-    })
+    }).populate('player1 player2', 'name')
 
     mergedLeagues.push({
       ...league.toObject(),

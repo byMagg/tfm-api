@@ -4,15 +4,18 @@ const leagueMatchSchema = new Schema(
   {
     player1: {
       type: String,
+      ref: 'User',
     },
     player2: {
       type: String,
+      ref: 'User',
     },
     season_id: {
       type: String,
     },
     winner: {
       type: String,
+      ref: 'User',
     },
     score: {
       type: String,
