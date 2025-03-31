@@ -231,6 +231,41 @@ router.post('/leagues/:id/players', protect, async (req, res) => {
   })
 })
 
+router.delete('/leagues/:id/players', protect, async (req, res) => {
+  const { id } = req.params
+
+  const { playerIds } = req.body
+
+  const league = await League.findById(id)
+
+  if (!league) {
+    return sendError({
+      res,
+      statusCode: 404,
+      message: 'League not found',
+    })
+  }
+
+  if (!Array.isArray(playerIds) || playerIds.length === 0) {
+    return sendError({
+      res,
+      statusCode: 400,
+      message: 'Debes enviar una lista de playerIds válida',
+    })
+  }
+
+  league.players = league.players.filter(
+    (playerId) => !playerIds.includes(playerId)
+  )
+
+  await league.save()
+
+  sendResponse({
+    res,
+    data: league,
+  })
+})
+
 router.get('/leagues/players/:playerId', protect, async (req, res) => {
   const { playerId } = req.params
   const leagues = await League.find({ players: playerId })
