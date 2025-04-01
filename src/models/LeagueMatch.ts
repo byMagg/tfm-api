@@ -20,6 +20,9 @@ const leagueMatchSchema = new Schema(
     score: {
       type: String,
     },
+    date: {
+      type: Date,
+    },
   },
   {
     collection: 'league-matches',

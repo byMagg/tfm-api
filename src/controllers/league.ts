@@ -43,20 +43,31 @@ export const createLeague = async (req: any, res: any) => {
 
   const league = await League.create({ name })
 
-  const startedAt = new Date()
+  const startDate = new Date()
+  const endDate = new Date()
 
-  if (startedAt.getMonth() === 11) {
-    startedAt.setMonth(0)
-    startedAt.setFullYear(startedAt.getFullYear() + 1)
+  if (startDate.getMonth() === 11) {
+    startDate.setMonth(0)
+    startDate.setFullYear(startDate.getFullYear() + 1)
   }
 
-  for (let i = startedAt.getMonth(); i < 12; i++) {
-    startedAt.setMonth(i)
-    startedAt.setDate(1)
-    startedAt.setHours(0, 0, 0, 0)
+  if (endDate.getMonth() === 11) {
+    endDate.setMonth(0)
+    endDate.setFullYear(endDate.getFullYear() + 1)
+  }
+
+  for (let i = startDate.getMonth(); i < 12; i++) {
+    startDate.setMonth(i)
+    startDate.setDate(1)
+    startDate.setHours(0, 0, 0, 0)
+
+    endDate.setMonth(i)
+    endDate.setDate(31)
+    endDate.setHours(23, 59, 59, 999)
 
     await Round.create({
-      startedAt: startedAt,
+      startDate: startDate,
+      endDate: endDate,
       league_id: league._id,
     })
   }
@@ -103,14 +114,14 @@ export const initRound = async (req: any, res: any) => {
   }
 
   const now = new Date()
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
   const currentRound = await Round.findOne({
     league_id: league._id,
-    startedAt: {
-      $gte: startOfMonth,
-      $lt: endOfMonth,
+    startDate: {
+      $lte: now,
+    },
+    endDate: {
+      $gte: now,
     },
   })
 
@@ -241,7 +252,7 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
   for (const league of leagues) {
     const currentRound = await Round.findOne({
       league_id: league._id,
-      startedAt: {
+      startDate: {
         $gte: startOfMonth,
         $lt: endOfMonth,
       },

@@ -2,7 +2,10 @@ import mongoose, { Schema } from 'mongoose'
 
 const roundSchema = new Schema(
   {
-    startedAt: {
+    startDate: {
+      type: Date,
+    },
+    endDate: {
       type: Date,
     },
     league_id: {
