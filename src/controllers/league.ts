@@ -143,14 +143,14 @@ export const initRound = async (req: any, res: any) => {
     })
   }
 
-  await LeagueMatch.deleteMany({ round_id: currentRound._id })
+  await LeagueMatch.deleteMany({ round: currentRound._id })
 
   const matches = []
 
   for (let i = 0; i < players.length; i++) {
     for (let j = i + 1; j < players.length; j++) {
       matches.push({
-        round_id: currentRound._id,
+        round: currentRound._id,
         player1: players[i],
         player2: players[j],
       })
@@ -259,7 +259,7 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
     })
 
     const matches = await LeagueMatch.find({
-      round_id: currentRound?._id,
+      round: currentRound?._id,
       $or: [{ player1: playerId }, { player2: playerId }],
     }).populate('player1 player2', 'name')
 

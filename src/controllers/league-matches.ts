@@ -2,10 +2,10 @@ import { LeagueMatch } from '../models/LeagueMatch'
 import { sendResponse } from '../utils'
 
 export const getLeagueMatch = async (req: any, res: any) => {
-  const match = await LeagueMatch.findById(req.params.id).populate(
-    'player1 player2',
-    'name'
-  )
+  const match = await LeagueMatch.findById(req.params.id)
+    .populate('player1 player2', 'name')
+    .populate('round', 'startDate endDate')
+
   sendResponse({
     res,
     data: match,
