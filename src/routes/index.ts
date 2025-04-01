@@ -8,7 +8,7 @@ import {
   getLeagues,
   initRound,
   removePlayersFromLeague,
-  startLeague,
+  startSeason,
 } from '../controllers/league'
 import {
   getLeagueMatch,
@@ -29,7 +29,7 @@ router.get('/leagues', protect, getLeagues)
 router.get('/leagues/:id', protect, getLeague)
 router.post('/leagues', protect, createLeague)
 
-router.post('/leagues/:id/start', protect, startLeague)
+router.post('/leagues/:id/start', protect, startSeason)
 router.post('/leagues/:id/matches', protect, initRound)
 router.post('/leagues/:id/players', protect, addPlayersToLeague)
 router.delete('/leagues/:id/players', protect, removePlayersFromLeague)
