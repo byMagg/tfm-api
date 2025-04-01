@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
-import { protect } from '../middlewares/authMiddleware'
+import { protect } from '../middlewares/auth'
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
 import { Season } from '../models/Season'
@@ -435,6 +435,7 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
     })
 
     sendResponse({
