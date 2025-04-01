@@ -31,6 +31,8 @@ app.use(
 
 connect()
 
+import './socket'
+
 app.use('/api', router)
 
 httpServer.listen(port, () => {

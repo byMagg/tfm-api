@@ -7,9 +7,11 @@ const messageSchema = new Schema(
     },
     from: {
       type: String,
+      ref: 'User',
     },
     to: {
       type: String,
+      ref: 'User',
     },
   },
   {
