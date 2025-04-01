@@ -12,6 +12,7 @@ import {
 } from '../controllers/league'
 import {
   getLeagueMatch,
+  setLeagueMatchDate,
   setLeagueMatchScore,
 } from '../controllers/league-matches'
 import { createUser, getUsers, getUsersByIds } from '../controllers/user'
@@ -39,6 +40,7 @@ router.get('/leagues/players/:playerId', protect, checkPlayerInLeague)
 // league-matches
 router.get('/league-matches/:id', protect, getLeagueMatch)
 router.post('/league-matches/:id/score', protect, setLeagueMatchScore)
+router.post('/league-matches/:id/date', protect, setLeagueMatchDate)
 
 // auth
 router.post('/register', register)

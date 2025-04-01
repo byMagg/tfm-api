@@ -27,3 +27,19 @@ export const setLeagueMatchScore = async (req: any, res: any) => {
     data: match,
   })
 }
+
+export const setLeagueMatchDate = async (req: any, res: any) => {
+  const { id } = req.params
+  const { date } = req.body
+
+  const match = await LeagueMatch.findByIdAndUpdate(
+    { _id: id },
+    { $set: { date } },
+    { new: true }
+  )
+
+  sendResponse({
+    res,
+    data: match,
+  })
+}
