@@ -59,10 +59,10 @@ export const createLeague = async (req: any, res: any) => {
   for (let i = startDate.getMonth(); i < 12; i++) {
     startDate.setMonth(i)
     startDate.setDate(1)
-    startDate.setHours(0, 0, 0, 0)
+    startDate.setHours(2, 0, 0, 0)
 
     endDate.setMonth(i)
-    endDate.setDate(31)
+    endDate.setDate(28)
     endDate.setHours(23, 59, 59, 999)
 
     await Round.create({
