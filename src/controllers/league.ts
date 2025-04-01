@@ -1,6 +1,6 @@
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
-import { Season } from '../models/Season'
+import { Round } from '../models/Round'
 import { sendError, sendResponse } from '../utils'
 
 export const getLeagues = async (req: any, res: any) => {
@@ -55,7 +55,7 @@ export const createLeague = async (req: any, res: any) => {
     startedAt.setDate(1)
     startedAt.setHours(0, 0, 0, 0)
 
-    await Season.create({
+    await Round.create({
       startedAt: startedAt,
       league_id: league._id,
     })
@@ -106,7 +106,7 @@ export const initRound = async (req: any, res: any) => {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
-  const currentSeason = await Season.findOne({
+  const currentSeason = await Round.findOne({
     league_id: league._id,
     startedAt: {
       $gte: startOfMonth,
@@ -237,7 +237,7 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
   let mergedLeagues = []
 
   for (const league of leagues) {
-    const currentSeason = await Season.findOne({
+    const currentSeason = await Round.findOne({
       league_id: league._id,
       startedAt: {
         $gte: startOfMonth,

@@ -10,8 +10,8 @@ const seasonSchema = new Schema(
     },
   },
   {
-    collection: 'seasons',
+    collection: 'rounds',
   }
 )
 
-export const Season = mongoose.model('Season', seasonSchema)
+export const Round = mongoose.model('Round', seasonSchema)
