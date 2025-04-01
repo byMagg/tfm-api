@@ -68,7 +68,7 @@ export const createLeague = async (req: any, res: any) => {
   })
 }
 
-export const startLeague = async (req: any, res: any) => {
+export const startSeason = async (req: any, res: any) => {
   const { id } = req.params
   const league = await League.findOneAndUpdate(
     { _id: id },
@@ -106,7 +106,7 @@ export const initRound = async (req: any, res: any) => {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
 
-  const currentSeason = await Round.findOne({
+  const currentRound = await Round.findOne({
     league_id: league._id,
     startedAt: {
       $gte: startOfMonth,
@@ -114,11 +114,11 @@ export const initRound = async (req: any, res: any) => {
     },
   })
 
-  if (!currentSeason) {
+  if (!currentRound) {
     return sendError({
       res,
       statusCode: 404,
-      message: 'Season not found',
+      message: 'Round not found',
     })
   }
 
@@ -132,12 +132,14 @@ export const initRound = async (req: any, res: any) => {
     })
   }
 
+  await LeagueMatch.deleteMany({ round_id: currentRound._id })
+
   const matches = []
 
   for (let i = 0; i < players.length; i++) {
     for (let j = i + 1; j < players.length; j++) {
       matches.push({
-        season_id: currentSeason._id,
+        round_id: currentRound._id,
         player1: players[i],
         player2: players[j],
       })
@@ -237,7 +239,7 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
   let mergedLeagues = []
 
   for (const league of leagues) {
-    const currentSeason = await Round.findOne({
+    const currentRound = await Round.findOne({
       league_id: league._id,
       startedAt: {
         $gte: startOfMonth,
@@ -246,13 +248,13 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
     })
 
     const matches = await LeagueMatch.find({
-      season_id: currentSeason?._id,
+      round_id: currentRound?._id,
       $or: [{ player1: playerId }, { player2: playerId }],
     }).populate('player1 player2', 'name')
 
     mergedLeagues.push({
       ...league.toObject(),
-      currentSeason,
+      currentRound,
       matches,
     })
   }

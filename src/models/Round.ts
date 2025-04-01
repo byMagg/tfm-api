@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
-const seasonSchema = new Schema(
+const roundSchema = new Schema(
   {
     startedAt: {
       type: Date,
@@ -14,4 +14,4 @@ const seasonSchema = new Schema(
   }
 )
 
-export const Round = mongoose.model('Round', seasonSchema)
+export const Round = mongoose.model('Round', roundSchema)

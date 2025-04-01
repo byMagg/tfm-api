@@ -10,7 +10,7 @@ const leagueMatchSchema = new Schema(
       type: String,
       ref: 'User',
     },
-    season_id: {
+    round_id: {
       type: String,
     },
     winner: {
