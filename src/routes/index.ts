@@ -15,9 +15,9 @@ import {
   setLeagueMatchDate,
   setLeagueMatchScore,
 } from '../controllers/league-matches'
-import { getMatches } from '../controllers/match'
-import { getPlayers } from '../controllers/player'
-import { getRankings } from '../controllers/ranking'
+import { getMatch, getMatches } from '../controllers/match'
+import { getPlayer, getPlayers } from '../controllers/player'
+import { getRanking, getRankings } from '../controllers/ranking'
 import { createUser, getUsers, getUsersByIds } from '../controllers/user'
 import { protect } from '../middlewares/auth'
 
@@ -47,12 +47,15 @@ router.post('/league-matches/:id/date', protect, setLeagueMatchDate)
 
 // matches
 router.get('/matches', protect, getMatches)
+router.get('/matches/:id', protect, getMatch)
 
 // players
 router.get('/players', protect, getPlayers)
+router.get('/players/:id', protect, getPlayer)
 
 // rankings
 router.get('/rankings', protect, getRankings)
+router.get('/rankings/:id', protect, getRanking)
 
 // auth
 router.post('/register', register)

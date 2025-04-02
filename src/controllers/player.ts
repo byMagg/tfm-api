@@ -20,3 +20,11 @@ export const getPlayers = async (req: any, res: any) => {
     page: pageNumber,
   })
 }
+
+export const getPlayer = async (req: any, res: any) => {
+  const player = await Player.findById(req.params.id)
+  sendResponse({
+    res,
+    data: player,
+  })
+}

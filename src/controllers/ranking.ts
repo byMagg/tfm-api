@@ -20,3 +20,11 @@ export const getRankings = async (req: any, res: any) => {
     page: pageNumber,
   })
 }
+
+export const getRanking = async (req: any, res: any) => {
+  const ranking = await Ranking.findById(req.params.id)
+  sendResponse({
+    res,
+    data: ranking,
+  })
+}

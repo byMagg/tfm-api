@@ -20,3 +20,11 @@ export const getMatches = async (req: any, res: any) => {
     page: pageNumber,
   })
 }
+
+export const getMatch = async (req: any, res: any) => {
+  const match = await Match.findById(req.params.id)
+  sendResponse({
+    res,
+    data: match,
+  })
+}
