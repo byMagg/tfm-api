@@ -15,6 +15,9 @@ import {
   setLeagueMatchDate,
   setLeagueMatchScore,
 } from '../controllers/league-matches'
+import { getMatches } from '../controllers/match'
+import { getPlayers } from '../controllers/player'
+import { getRankings } from '../controllers/ranking'
 import { createUser, getUsers, getUsersByIds } from '../controllers/user'
 import { protect } from '../middlewares/auth'
 
@@ -41,6 +44,15 @@ router.get('/leagues/players/:playerId', protect, checkPlayerInLeague)
 router.get('/league-matches/:id', protect, getLeagueMatch)
 router.post('/league-matches/:id/score', protect, setLeagueMatchScore)
 router.post('/league-matches/:id/date', protect, setLeagueMatchDate)
+
+// matches
+router.get('/matches', protect, getMatches)
+
+// players
+router.get('/players', protect, getPlayers)
+
+// rankings
+router.get('/rankings', protect, getRankings)
 
 // auth
 router.post('/register', register)
