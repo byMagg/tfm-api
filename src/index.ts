@@ -22,6 +22,8 @@ export const io = new Server(httpServer, {
   },
 })
 
+import './firebase'
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(

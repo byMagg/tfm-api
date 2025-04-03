@@ -1,9 +1,17 @@
-import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
+import admin from 'firebase-admin'
 import mongoose from 'mongoose'
 import { User } from './models/User'
 
 dotenv.config()
+
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  }),
+})
 
 const seedUsers = async () => {
   try {
@@ -12,24 +20,66 @@ const seedUsers = async () => {
     )
     console.log('Connected to MongoDB')
 
-    await User.deleteMany({})
+    await deleteAllUsers()
     console.log('Users deleted')
 
-    const hashedUsers = usersToCreate.map((user) => {
-      const hashedPassword = bcrypt.hashSync(user.password, 10)
-      return {
-        ...user,
-        password: hashedPassword,
-      }
-    })
-
-    await User.insertMany(hashedUsers)
+    await createUsers(usersToCreate)
     console.log('Users created')
 
     await mongoose.disconnect()
     console.log('Disconnected from MongoDB')
   } catch (error) {
     console.error('Error connecting to MongoDB: ', error)
+  }
+}
+
+async function deleteAllUsers() {
+  try {
+    let nextPageToken
+    do {
+      // Listar usuarios en lotes de hasta 1000 por página
+      const listUsersResult = await admin.auth().listUsers(1000, nextPageToken)
+      const userIds = listUsersResult.users.map((userRecord) => userRecord.uid)
+
+      if (userIds.length > 0) {
+        // Eliminar usuarios en lote
+        await admin.auth().deleteUsers(userIds)
+        console.log(`Eliminados ${userIds.length} usuarios`)
+      }
+
+      nextPageToken = listUsersResult.pageToken
+    } while (nextPageToken)
+
+    await User.deleteMany({})
+    console.log('Todos los usuarios han sido eliminados.')
+  } catch (error) {
+    console.error('Error al eliminar usuarios:', error)
+  }
+}
+
+async function createUsers(
+  users: { email: string; password: string; name: string }[]
+) {
+  for (const user of users) {
+    try {
+      const userRecord = await admin.auth().createUser({
+        email: user.email,
+        password: user.password,
+        displayName: user.name,
+      })
+
+      await User.create({
+        _id: userRecord.uid,
+        name: user.name,
+        email: user.email,
+      })
+
+      console.log(`Usuario creado: ${userRecord.uid}`)
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`Error al crear usuario: ${error.message}`)
+      }
+    }
   }
 }
 

@@ -1,16 +1,9 @@
 import { NextFunction } from 'express'
-import jwt, { JwtPayload } from 'jsonwebtoken'
-import { User } from '../models/User'
+import { getAuth } from 'firebase-admin/auth'
 import { sendError } from '../utils'
 
 const protect = async (req: any, res: any, next: NextFunction) => {
-  let token
-
-  if (req.cookies.__session) {
-    token = req.cookies.__session
-  } else if (req.headers.authorization?.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1]
-  }
+  const token = req.headers.authorization?.split('Bearer ')[1]
 
   if (!token) {
     return sendError({
@@ -21,13 +14,9 @@ const protect = async (req: any, res: any, next: NextFunction) => {
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload
-    if (typeof decoded === 'object' && decoded.id) {
-      req.user = await User.findById(decoded.id).select('-password')
-    } else {
+    const decoded = await getAuth().verifySessionCookie(token, true)
+
+    if (!decoded) {
       return sendError({
         res,
         statusCode: 401,
@@ -36,6 +25,7 @@ const protect = async (req: any, res: any, next: NextFunction) => {
     }
     next()
   } catch (error) {
+    console.log(error)
     sendError({
       res,
       statusCode: 401,
