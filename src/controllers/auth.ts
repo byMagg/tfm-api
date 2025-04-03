@@ -36,7 +36,7 @@ export const login = async (req: any, res: any) => {
     sendError({
       res,
       statusCode: 500,
-      message: 'Error al crear el usuario',
+      message: 'Error al iniciar sesión',
     })
   }
 }
