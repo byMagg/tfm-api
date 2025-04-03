@@ -7,7 +7,8 @@
     "start": "nodemon src/index.ts",
     "build": "tsc",
     "serve": "ts-node src/index.ts",
-    "seed": "ts-node src/seeder.ts"
+    "seed": "ts-node src/seeder.ts",
+    "start:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
