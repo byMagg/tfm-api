@@ -13,9 +13,11 @@ const app = express()
 const httpServer = createServer(app)
 const port = Number(process.env.PORT) || 3000
 
+const APP_URL = process.env.PUBLIC_APP_URL || 'http://localhost:4321'
+
 export const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:4321',
+    origin: APP_URL,
     credentials: true,
   },
 })
@@ -24,7 +26,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(
   cors({
-    origin: 'http://localhost:4321',
+    origin: APP_URL,
     credentials: true,
   })
 )
