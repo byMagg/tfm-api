@@ -8,6 +8,7 @@
     "build": "tsc",
     "serve": "ts-node src/index.ts",
     "seed": "ts-node src/seeder.ts",
+    "seed:prod": "node dist/seeder.js",
     "start:prod": "node dist/index.js"
   },
   "keywords": [],
