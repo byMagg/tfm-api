@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import { User } from '../models/User'
 import { sendError, sendResponse } from '../utils'
 
@@ -32,11 +31,8 @@ export const getUsersByIds = async (req: any, res: any) => {
     })
   }
 
-  const validIds = ids
-    .filter((id: string) => mongoose.Types.ObjectId.isValid(id))
-    .map((id: string) => new mongoose.Types.ObjectId(id))
+  const users = await User.find({ _id: { $in: ids } })
 
-  const users = await User.find({ _id: { $in: validIds } })
   sendResponse({
     res,
     data: users,
