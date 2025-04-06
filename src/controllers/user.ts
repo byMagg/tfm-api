@@ -23,7 +23,7 @@ export const getUsers = async (req: any, res: any) => {
 export const getUsersByIds = async (req: any, res: any) => {
   const { ids } = req.body
 
-  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+  if (!ids || !Array.isArray(ids)) {
     return sendError({
       res,
       statusCode: 400,
