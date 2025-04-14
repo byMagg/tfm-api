@@ -272,8 +272,6 @@ export const checkPlayerInLeague = async (req: any, res: any) => {
 
   sendResponse({
     res,
-    data: {
-      leagues: mergedLeagues,
-    },
+    data: mergedLeagues,
   })
 }
