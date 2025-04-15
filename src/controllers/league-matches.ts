@@ -1,5 +1,5 @@
 import { LeagueMatch } from '../models/LeagueMatch'
-import { Round } from '../models/Round'
+import { Standing } from '../models/Standing'
 import { sendError, sendResponse } from '../utils'
 
 export const getLeagueMatch = async (req: any, res: any) => {
@@ -21,7 +21,7 @@ export const setLeagueMatchScore = async (req: any, res: any) => {
     { _id: id },
     { $set: { score, winner } },
     { new: true }
-  ).populate('round')
+  )
 
   if (!match) {
     return sendError({
@@ -49,17 +49,16 @@ export const setLeagueMatchScore = async (req: any, res: any) => {
 
   const loser = match.player1 === winner ? match.player2 : match.player1
 
-  await Round.findByIdAndUpdate(
-    match.round,
-    {
-      $set: {
-        standings: [
-          { player: winner, points: 5 },
-          { player: loser, points: 3 },
-        ],
-      },
-    },
-    { new: true }
+  await Standing.findOneAndUpdate(
+    { player: winner, round: match.round },
+    { $inc: { points: 5 } },
+    { new: true, upsert: true }
+  )
+
+  await Standing.findOneAndUpdate(
+    { player: loser, round: match.round },
+    { $inc: { points: 3 } },
+    { new: true, upsert: true }
   )
 
   sendResponse({

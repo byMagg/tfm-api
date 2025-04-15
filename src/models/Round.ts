@@ -14,10 +14,6 @@ const roundSchema = new Schema(
     round: {
       type: Number,
     },
-    standings: {
-      player: { type: Schema.Types.ObjectId, ref: 'User' },
-      points: { type: Number },
-    },
   },
   {
     collection: 'rounds',

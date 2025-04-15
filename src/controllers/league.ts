@@ -1,6 +1,7 @@
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
 import { Round } from '../models/Round'
+import { Standing } from '../models/Standing'
 import { sendError, sendResponse } from '../utils'
 
 export const getLeagues = async (req: any, res: any) => {
@@ -33,13 +34,18 @@ export const getLeague = async (req: any, res: any) => {
 export const getRound = async (req: any, res: any) => {
   const { id } = req.params
 
-  const round = await Round.findOne({ league_id: id, round: 1 }).populate(
-    'standings.player'
+  const round = await Round.findOne({ league_id: id, round: 1 })
+
+  const standings = await Standing.find({ round: round?._id }).populate(
+    'player'
   )
 
   sendResponse({
     res,
-    data: round,
+    data: {
+      ...round?.toJSON(),
+      standings,
+    },
   })
 }
 
