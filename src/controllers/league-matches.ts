@@ -51,7 +51,14 @@ export const setLeagueMatchScore = async (req: any, res: any) => {
 
   await Round.findByIdAndUpdate(
     match.round,
-    { $set: { standings: { [winner]: 5, [loser]: 3 } } },
+    {
+      $set: {
+        standings: [
+          { player: winner, points: 5 },
+          { player: loser, points: 3 },
+        ],
+      },
+    },
     { new: true }
   )
 

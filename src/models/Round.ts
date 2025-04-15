@@ -1,15 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
 
-interface IRound extends Document {
-  startDate: Date
-  endDate: Date
-  league_id: string
-  round: number
-  standings: {
-    [playerId: string]: number
-  }
-}
-
 const roundSchema = new Schema(
   {
     startDate: {
@@ -25,10 +15,8 @@ const roundSchema = new Schema(
       type: Number,
     },
     standings: {
-      type: Map,
-      of: Number,
-      default: {},
-      ref: 'User',
+      player: { type: Schema.Types.ObjectId, ref: 'User' },
+      points: { type: Number },
     },
   },
   {

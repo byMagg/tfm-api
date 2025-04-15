@@ -33,7 +33,9 @@ export const getLeague = async (req: any, res: any) => {
 export const getRound = async (req: any, res: any) => {
   const { id } = req.params
 
-  const round = await Round.findOne({ league_id: id, round: 1 })
+  const round = await Round.findOne({ league_id: id, round: 1 }).populate(
+    'standings.player'
+  )
 
   sendResponse({
     res,
