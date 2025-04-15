@@ -30,6 +30,17 @@ export const getLeague = async (req: any, res: any) => {
   })
 }
 
+export const getRound = async (req: any, res: any) => {
+  const { id } = req.params
+
+  const round = await Round.findOne({ league_id: id, round: 1 })
+
+  sendResponse({
+    res,
+    data: round,
+  })
+}
+
 export const createLeague = async (req: any, res: any) => {
   const { name } = req.body
 
@@ -56,6 +67,8 @@ export const createLeague = async (req: any, res: any) => {
     endDate.setFullYear(endDate.getFullYear() + 1)
   }
 
+  let currentRound = 1
+
   for (let i = startDate.getMonth(); i < 12; i++) {
     startDate.setMonth(i)
     startDate.setDate(1)
@@ -69,6 +82,7 @@ export const createLeague = async (req: any, res: any) => {
       startDate: startDate,
       endDate: endDate,
       league_id: league._id,
+      round: currentRound++,
     })
   }
 

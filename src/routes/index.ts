@@ -6,6 +6,7 @@ import {
   createLeague,
   getLeague,
   getLeagues,
+  getRound,
   initRound,
   removePlayersFromLeague,
   startSeason,
@@ -31,6 +32,7 @@ router.post('/users', protect, createUser)
 // leagues
 router.get('/leagues', protect, getLeagues)
 router.get('/leagues/:id', protect, getLeague)
+router.get('/leagues/:id/rounds', protect, getRound)
 router.post('/leagues', protect, createLeague)
 
 router.post('/leagues/:id/start', protect, startSeason)
