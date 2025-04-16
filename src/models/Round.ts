@@ -14,6 +14,17 @@ const roundSchema = new Schema(
     round: {
       type: Number,
     },
+    groups: [
+      {
+        players: [
+          {
+            type: String,
+            ref: 'User',
+          },
+        ],
+        _id: false,
+      },
+    ],
   },
   {
     collection: 'rounds',

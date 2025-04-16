@@ -34,7 +34,9 @@ export const getLeague = async (req: any, res: any) => {
 export const getRound = async (req: any, res: any) => {
   const { id } = req.params
 
-  const round = await Round.findOne({ league_id: id, round: 1 })
+  const round = await Round.findOne({ league_id: id, round: 1 }).populate(
+    'groups.players'
+  )
 
   const standings = await Standing.find({ round: round?._id })
     .sort({ points: -1 })
@@ -135,17 +137,45 @@ export const initRound = async (req: any, res: any) => {
     })
   }
 
+  function chunkPlayers<T>(
+    players: T[],
+    numberOfGroups: number
+  ): { players: T[] }[] {
+    const groups: { players: T[] }[] = Array.from(
+      { length: numberOfGroups },
+      () => ({ players: [] })
+    )
+    let i = 0
+
+    for (const player of players) {
+      groups[i % numberOfGroups].players.push(player)
+      i++
+    }
+
+    return groups
+  }
+
   const now = new Date()
 
-  const currentRound = await Round.findOne({
-    league_id: league._id,
-    startDate: {
-      $lte: now,
+  const groupCount = Math.ceil(league.players.length / 6)
+  const groups = chunkPlayers(league.players, groupCount)
+
+  const currentRound = await Round.findOneAndUpdate(
+    {
+      league_id: league._id,
+      startDate: {
+        $lte: now,
+      },
+      endDate: {
+        $gte: now,
+      },
     },
-    endDate: {
-      $gte: now,
-    },
-  })
+    {
+      $set: {
+        groups,
+      },
+    }
+  )
 
   if (!currentRound) {
     return sendError({
