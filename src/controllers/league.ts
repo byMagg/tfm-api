@@ -196,16 +196,19 @@ export const initRound = async (req: any, res: any) => {
   }
 
   await LeagueMatch.deleteMany({ round: currentRound._id })
+  await Standing.deleteMany({ round: currentRound._id })
 
   const matches = []
 
-  for (let i = 0; i < players.length; i++) {
-    for (let j = i + 1; j < players.length; j++) {
-      matches.push({
-        round: currentRound._id,
-        player1: players[i],
-        player2: players[j],
-      })
+  for (let group of groups) {
+    for (let i = 0; i < group.players.length; i++) {
+      for (let j = i + 1; j < group.players.length; j++) {
+        matches.push({
+          round: currentRound._id,
+          player1: group.players[i],
+          player2: group.players[j],
+        })
+      }
     }
   }
 
