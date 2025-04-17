@@ -1,3 +1,4 @@
+import { Types } from 'mongoose'
 import { League } from '../models/League'
 import { LeagueMatch } from '../models/LeagueMatch'
 import { Round } from '../models/Round'
@@ -24,7 +25,17 @@ export const getLeagues = async (req: any, res: any) => {
 }
 
 export const getLeague = async (req: any, res: any) => {
-  const league = await League.findById(req.params.id)
+  const { id } = req.params
+
+  if (!id || !Types.ObjectId.isValid(id)) {
+    return sendError({
+      res,
+      statusCode: 400,
+      message: 'Debes enviar un id',
+    })
+  }
+
+  const league = await League.findById(id)
   sendResponse({
     res,
     data: league,
