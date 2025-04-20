@@ -5,7 +5,7 @@ import { sendError, sendResponse } from '../utils'
 export const getLeagueMatch = async (req: any, res: any) => {
   const match = await LeagueMatch.findById(req.params.id)
     .populate('player1 player2', 'name')
-    .populate('round', 'startDate endDate')
+    .populate('round', 'startDate endDate league_id')
 
   sendResponse({
     res,
