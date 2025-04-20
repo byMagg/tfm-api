@@ -62,6 +62,35 @@ export const getRound = async (req: any, res: any) => {
   })
 }
 
+export const getHistoricMatches = async (req: any, res: any) => {
+  const { id } = req.params
+
+  const round = await Round.find({
+    league_id: id,
+    groups: { $exists: true, $not: { $size: 0 } },
+  })
+    .select('_id')
+    .sort({ round: 1 })
+
+  if (!round) {
+    return sendError({
+      res,
+      statusCode: 404,
+      message: 'Round not found',
+    })
+  }
+
+  const matches = await LeagueMatch.find({
+    round: { $in: round.map((r) => r._id) },
+    winner: { $exists: true },
+  }).populate('player1 player2')
+
+  sendResponse({
+    res,
+    data: matches,
+  })
+}
+
 export const createLeague = async (req: any, res: any) => {
   const { name } = req.body
 
