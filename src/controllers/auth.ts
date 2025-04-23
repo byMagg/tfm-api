@@ -1,44 +1,47 @@
+import { auth } from 'firebase-admin'
 import { User } from '../models/User'
-import { generateToken, sendError, sendResponse } from '../utils'
+import { sendError, sendResponse } from '../utils'
 
 export const login = async (req: any, res: any) => {
-  const { email, password } = req.body
+  const idToken = req.headers.authorization?.split('Bearer ')[1]
 
-  try {
-    const user = await User.findOne({ email })
-
-    if (!user || !(await user.matchPassword(password))) {
-      return sendError({
-        res,
-        statusCode: 401,
-        message: 'Credenciales incorrectas',
-      })
-    }
-
-    const token = generateToken(user.id)
-
-    res.cookie('__session', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-    })
-
-    sendResponse({
+  if (!idToken) {
+    return sendError({
       res,
-      data: {
-        ...user.toJSON(),
-        token: token,
-      },
-      statusCode: 200,
-    })
-  } catch (error) {
-    sendError({
-      res,
-      statusCode: 500,
-      message: 'Error al iniciar sesión',
+      statusCode: 401,
+      message: 'Token no encontrado',
     })
   }
+
+  try {
+    await auth().verifyIdToken(idToken)
+  } catch (error) {
+    return sendError({
+      res,
+      statusCode: 401,
+      message: 'Token invalido',
+    })
+  }
+
+  const expiresIn = 60 * 60 * 24 * 14 * 1000
+  const sessionCookie = await auth().createSessionCookie(idToken, {
+    expiresIn,
+  })
+
+  res.cookie('__session', sessionCookie, {
+    maxAge: expiresIn,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  })
+
+  sendResponse({
+    res,
+    data: {
+      message: 'Inicio de sesión exitoso',
+    },
+    statusCode: 200,
+  })
 }
 
 export const register = async (req: any, res: any) => {

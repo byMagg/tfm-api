@@ -1,5 +1,5 @@
 import { NextFunction } from 'express'
-import { getAuth } from 'firebase-admin/auth'
+import { FirebaseAuthError, getAuth } from 'firebase-admin/auth'
 import { sendError } from '../utils'
 
 const protect = async (req: any, res: any, next: NextFunction) => {
@@ -14,7 +14,7 @@ const protect = async (req: any, res: any, next: NextFunction) => {
   }
 
   try {
-    const decoded = await getAuth().verifySessionCookie(token, true)
+    const decoded = await getAuth().verifyIdToken(token)
 
     if (!decoded) {
       return sendError({
@@ -24,8 +24,13 @@ const protect = async (req: any, res: any, next: NextFunction) => {
       })
     }
     next()
-  } catch (error) {
-    console.log(error)
+  } catch (error: unknown) {
+    if (error instanceof FirebaseAuthError) {
+      if (error.code === 'auth/argument-error') console.error('Token no válido')
+    } else {
+      console.error(error)
+    }
+
     sendError({
       res,
       statusCode: 401,

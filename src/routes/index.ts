@@ -62,7 +62,7 @@ router.get('/rankings', protect, getRankings)
 router.get('/rankings/:id', protect, getRanking)
 
 // auth
-router.post('/register', register)
-router.post('/login', login)
+router.post('/auth/register', register)
+router.post('/auth/login', login)
 
 export default router
