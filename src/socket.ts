@@ -2,15 +2,20 @@ import { io } from '.'
 import { Message } from './models/Message'
 
 io.on('connection', async (socket) => {
-  socket.on('join', async (userId) => {
-    socket.join(userId)
-    console.log(`Usuario ${userId} se unió a su sala privada`)
+  socket.on('join', async ({ from, to }) => {
+    socket.join(`${from}-${to}`)
     try {
       const messages = await Message.find({
-        $or: [{ from: userId }, { to: userId }],
+        $or: [
+          { from, to },
+          { from: to, to: from },
+        ],
       }).sort({ timestamp: 1 })
+
       socket.emit('previousMessages', messages)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   })
 
   socket.on('message', async ({ content, from, to }) => {
@@ -22,7 +27,7 @@ io.on('connection', async (socket) => {
       })
       await newMessage.save()
 
-      io.to(to).to(from).emit('message', newMessage)
+      io.to(`${from}-${to}`).emit('message', newMessage)
     } catch (error) {
       console.log(error)
     }
