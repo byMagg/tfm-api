@@ -1,9 +1,15 @@
 import { io } from '.'
 import { Message } from './models/Message'
 
+const getRoomId = ({ from, to }: { from: string; to: string }) => {
+  return [from, to].sort().join('-')
+}
+
 io.on('connection', async (socket) => {
   socket.on('join', async ({ from, to }) => {
-    socket.join(`${from}-${to}`)
+    const roomId = getRoomId({ from, to })
+
+    socket.join(roomId)
     try {
       const messages = await Message.find({
         $or: [
@@ -27,7 +33,7 @@ io.on('connection', async (socket) => {
       })
       await newMessage.save()
 
-      io.to(`${from}-${to}`).emit('message', newMessage)
+      io.to(getRoomId({ from, to })).emit('message', newMessage)
     } catch (error) {
       console.log(error)
     }
