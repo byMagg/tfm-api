@@ -24,6 +24,9 @@ const leagueMatchSchema = new Schema(
     date: {
       type: Date,
     },
+    submitDate: {
+      type: Date,
+    },
   },
   {
     collection: 'league-matches',

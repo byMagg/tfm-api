@@ -19,7 +19,7 @@ export const setLeagueMatchScore = async (req: any, res: any) => {
 
   const match = await LeagueMatch.findByIdAndUpdate(
     { _id: id },
-    { $set: { score, winner } },
+    { $set: { score, winner, submitDate: new Date() } },
     { new: true }
   )
 
