@@ -45,9 +45,11 @@ export const getLeague = async (req: any, res: any) => {
 export const getRound = async (req: any, res: any) => {
   const { id } = req.params
 
-  const round = await Round.findOne({ league_id: id, round: 1 }).populate(
-    'groups.players'
-  )
+  const round = await Round.findOne({
+    league_id: id,
+    startDate: { $lte: new Date() },
+    endDate: { $gte: new Date() },
+  }).populate('groups.players')
 
   const standings = await Standing.find({ round: round?._id })
     .sort({ points: -1 })
