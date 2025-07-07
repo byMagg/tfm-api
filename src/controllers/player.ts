@@ -22,7 +22,11 @@ export const getPlayers = async (req: any, res: any) => {
 }
 
 export const getPlayer = async (req: any, res: any) => {
-  const player = await Player.findById(req.params.id)
+  const { id } = req.params
+
+  const player = await Player.findOne({
+    player_id: id,
+  })
   sendResponse({
     res,
     data: player,
