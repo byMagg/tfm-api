@@ -167,6 +167,24 @@ export const startSeason = async (req: any, res: any) => {
   })
 }
 
+function chunkPlayers<T>(
+  players: T[],
+  numberOfGroups: number
+): { players: T[] }[] {
+  const groups: { players: T[] }[] = Array.from(
+    { length: numberOfGroups },
+    () => ({ players: [] })
+  )
+  let i = 0
+
+  for (const player of players) {
+    groups[i % numberOfGroups].players.push(player)
+    i++
+  }
+
+  return groups
+}
+
 export const initRound = async (req: any, res: any) => {
   const { id } = req.params
   const league = await League.findById(id)
@@ -177,24 +195,6 @@ export const initRound = async (req: any, res: any) => {
       statusCode: 404,
       message: 'League not found',
     })
-  }
-
-  function chunkPlayers<T>(
-    players: T[],
-    numberOfGroups: number
-  ): { players: T[] }[] {
-    const groups: { players: T[] }[] = Array.from(
-      { length: numberOfGroups },
-      () => ({ players: [] })
-    )
-    let i = 0
-
-    for (const player of players) {
-      groups[i % numberOfGroups].players.push(player)
-      i++
-    }
-
-    return groups
   }
 
   const now = new Date()
@@ -259,6 +259,69 @@ export const initRound = async (req: any, res: any) => {
   sendResponse({
     res,
     data: response,
+  })
+}
+
+export const initEveryRound = async (req: any, res: any) => {
+  const leagues = await League.find()
+  const now = new Date()
+
+  for (const league of leagues) {
+    const groupCount = Math.ceil(league.players.length / 6)
+    const groups = chunkPlayers(league.players, groupCount)
+
+    const currentRound = await Round.findOneAndUpdate(
+      {
+        league_id: league._id,
+        startDate: {
+          $lte: now,
+        },
+        endDate: {
+          $gte: now,
+        },
+      },
+      {
+        $set: {
+          groups,
+        },
+      }
+    )
+
+    if (!currentRound) continue
+
+    const players = league.players
+
+    if (players.length < 2) continue
+
+    await LeagueMatch.deleteMany({ round: currentRound._id })
+    await Standing.deleteMany({ round: currentRound._id })
+
+    const matches = []
+
+    for (let group of groups) {
+      for (let i = 0; i < group.players.length; i++) {
+        for (let j = i + 1; j < group.players.length; j++) {
+          matches.push({
+            round: currentRound._id,
+            player1: group.players[i],
+            player2: group.players[j],
+          })
+        }
+      }
+    }
+
+    await LeagueMatch.insertMany(matches)
+  }
+
+  sendResponse({
+    res,
+    data: leagues.map((league) => {
+      return {
+        id: league._id,
+        name: league.name,
+        players: league.players.length,
+      }
+    }),
   })
 }
 
